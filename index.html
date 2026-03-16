@@ -902,8 +902,10 @@
             let wrapperId, containerId, filename;
             if(tipo === 'redondo') {
                 wrapperId = 'pdf-wrapper-redondo'; containerId = 'pdf-container-redondo'; filename = 'Plantilla_Redonda_JuanMiguel.pdf';
+                drawDisk("kumihimo-disk-print"); // Refrescar SVG
             } else if (tipo === 'cuadrado') {
                 wrapperId = 'pdf-wrapper-cuadrado'; containerId = 'pdf-container-cuadrado'; filename = 'Plantilla_Cuadrada_JuanMiguel.pdf';
+                drawSquarePlate("kumihimo-square-print"); // Refrescar SVG
             } else if (tipo === 'taller') {
                 wrapperId = 'pdf-wrapper-taller'; containerId = 'pdf-container-taller'; filename = 'Guia_Insumos_Taller_JuanMiguel.pdf';
             }
@@ -923,15 +925,19 @@
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
-                wrapper.style.display = 'none'; 
-                window.scrollTo(0, currentScroll);
-                showToast("Documento descargado", "success");
-            }).catch(err => {
-                wrapper.style.display = 'none'; 
-                window.scrollTo(0, currentScroll);
-                showToast("Error al generar PDF", "error");
-            });
+            // Usamos setTimeout para asegurar que el navegador dibuje el display: block antes de capturar
+            // Esto soluciona el problema de no poder descargar varias veces sin recargar
+            setTimeout(() => {
+                html2pdf().set(opt).from(element).save().then(() => {
+                    wrapper.style.display = 'none'; 
+                    window.scrollTo(0, currentScroll);
+                    showToast("Documento descargado", "success");
+                }).catch(err => {
+                    wrapper.style.display = 'none'; 
+                    window.scrollTo(0, currentScroll);
+                    showToast("Error al generar PDF", "error");
+                });
+            }, 150);
         }
 
         // --- SISTEMA DE INVENTARIO INTELIGENTE ---
