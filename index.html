@@ -10,10 +10,23 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap');
         
+        :root {
+            --bg-main: #f4f5f7;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+        }
+
+        .dark-mode {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f1f5f9;
+        }
+
         body {
             font-family: 'Open Sans', sans-serif;
-            background-color: #f4f5f7;
-            color: #333;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
             overflow-x: hidden;
         }
         
@@ -36,7 +49,7 @@
             height: 18rem;
             border-radius: 0.75rem;
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             border: 2px solid #e5e7eb;
             background-color: #f3f4f6;
             display: flex;
@@ -49,20 +62,37 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .card-custom {
+            background-color: var(--bg-card);
+            border-color: rgba(229, 231, 235, 0.2);
+        }
+
+        /* Botón de Modo Oscuro */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="antialiased">
 
+    <!-- Botón Flotante Modo Oscuro -->
+    <div onclick="toggleDarkMode()" class="theme-toggle bg-indigo-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition">
+        <i id="theme-icon" class="fas fa-moon"></i>
+    </div>
+
     <!-- CONTENEDOR MAQUETADO PARA EL PDF -->
     <div id="pdf-wrapper" style="display: none; position: absolute; top: 0; left: 0; width: 210mm; background: white; z-index: -1;">
         <div id="pdf-container" style="width: 210mm; height: 297mm; padding: 2mm 20mm 0 20mm; box-sizing: border-box; font-family: Arial, sans-serif; background: white; margin: 0;">
-            
             <div style="text-align: center; margin-bottom: 15px;">
                 <h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0; text-transform: uppercase;">Plantilla de Fabricación</h1>
                 <h2 style="font-size: 16px; color: #dc2626; margin: 0 0 5px 0; font-weight: normal;">Disco Kumihimo (Mobidai) de 32 Ranuras</h2>
                 <p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p>
             </div>
-            
             <div style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; border: 2px solid #e5e7eb; padding: 15px; border-radius: 10px; background-color: #f9fafb;">
                 <div style="flex: 1;">
                     <h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🧵 Materiales:</h3>
@@ -83,11 +113,9 @@
                     </ol>
                 </div>
             </div>
-
             <div style="display: flex; justify-content: center; align-items: center;">
                 <svg id="kumihimo-disk-print" width="175mm" height="175mm" viewBox="0 0 400 400" style="display: block; margin: 0 auto;"></svg>
             </div>
-            
             <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #6b7280; font-style: italic;">
                 *La tensión uniforme es la clave del éxito. Propiedad de: Juan Miguel Rios Redondo.
             </div>
@@ -98,72 +126,96 @@
     <header class="hero-pattern text-white py-12 px-4 shadow-lg border-b-4 border-red-600 relative overflow-hidden">
         <div class="max-w-5xl mx-auto text-center relative z-10">
             <h1 class="text-4xl md:text-5xl font-bold mb-2">Masterclass de Kumihimo <span class="text-red-400 jp-font">(組み紐)</span></h1>
-            <p class="text-xl text-indigo-200 mb-4">Guía de Tejidos y Plantilla Imprimible</p>
-            <div class="inline-block bg-indigo-900/50 backdrop-blur-sm px-6 py-2 rounded-full border border-indigo-500/30">
-                <p class="text-sm font-semibold tracking-wider text-indigo-100 uppercase">: <span class="text-white"></span></p>
+            <p class="text-xl text-indigo-200 mb-6">Guía de Tejidos y Plantilla Imprimible</p>
+            <div class="inline-flex items-center bg-white/10 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 shadow-xl">
+                <div class="w-10 h-10 bg-indigo-500 rounded-full flex items-center justify-center mr-3 shadow-inner">
+                    <i class="fas fa-user-tie text-white text-xs"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-indigo-300 font-bold leading-none mb-1">Autor & Diseñador</p>
+                    <p class="text-sm font-bold text-white leading-none">Juan Miguel Rios Redondo</p>
+                </div>
             </div>
         </div>
     </header>
 
     <section class="max-w-5xl mx-auto px-4 py-12">
-        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 w-full flex flex-col items-center">
+        <div class="card-custom p-8 rounded-xl shadow-md border w-full flex flex-col items-center">
             <div class="text-center mb-8 w-full">
-                <h2 class="text-3xl font-bold text-indigo-900 mb-4 border-b-2 border-indigo-100 pb-2">Tu Disco Mobidai (PDF)</h2>
-                <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
-                    Haz clic en el botón para descargar tu plantilla corregida y personalizada.
+                <h2 class="text-3xl font-bold text-indigo-500 mb-4 border-b-2 border-indigo-100/20 pb-2">Tu Disco Mobidai (PDF)</h2>
+                <p class="opacity-70 mb-6 max-w-2xl mx-auto text-sm">
+                    Descarga la plantilla profesional diseñada para garantizar la tensión correcta en tus tejidos.
                 </p>
                 <button onclick="descargarPDF()" id="btn-descargar" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105 flex items-center justify-center mx-auto">
                     <i class="fas fa-file-pdf mr-3 text-xl"></i> <span>Descargar Plantilla de Juan Miguel</span>
                 </button>
             </div>
-            <svg id="kumihimo-disk" width="400" height="400" viewBox="0 0 400 400" class="mx-auto bg-white rounded-full shadow-sm" style="max-width: 100%; height: auto;"></svg>
+            <div class="bg-white p-4 rounded-full">
+                <svg id="kumihimo-disk" width="400" height="400" viewBox="0 0 400 400" class="mx-auto" style="max-width: 100%; height: auto;"></svg>
+            </div>
         </div>
     </section>
 
     <main class="max-w-5xl mx-auto px-4 py-8">
+        
+        <!-- Consejos del Experto -->
+        <section class="mb-12 bg-gradient-to-r from-indigo-900 to-indigo-800 p-8 rounded-2xl shadow-xl border border-indigo-700 text-white">
+            <h2 class="text-2xl font-bold mb-4 flex items-center"><i class="fas fa-lightbulb text-yellow-400 mr-3"></i>Tips de Juan Miguel para Principiantes</h2>
+            <div class="grid md:grid-cols-2 gap-6 text-sm opacity-90">
+                <div class="flex gap-4">
+                    <div class="text-indigo-400 font-bold text-xl">01</div>
+                    <p>Si pierdes la cuenta, el hilo que debes mover siempre es el que está a la derecha del par que está "atrás" en la secuencia.</p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="text-indigo-400 font-bold text-xl">02</div>
+                    <p>Usa siempre un peso central (Omori) para que la trenza no se suba y los hilos mantengan su lugar en el disco.</p>
+                </div>
+            </div>
+        </section>
+
         <!-- Calculadora -->
-        <section class="mb-12 bg-indigo-50 p-8 rounded-2xl shadow-inner border border-indigo-100">
-            <h2 class="text-2xl font-bold text-indigo-900 mb-4"><i class="fas fa-calculator text-indigo-500 mr-3"></i>Calculadora de Hilos</h2>
-            <div class="flex flex-col md:flex-row gap-4 items-center bg-white p-6 rounded-xl shadow-sm">
+        <section class="mb-12 bg-indigo-50 dark:bg-indigo-900/20 p-8 rounded-2xl shadow-inner border border-indigo-100 dark:border-indigo-800">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-4"><i class="fas fa-calculator mr-3"></i>Calculadora de Hilos</h2>
+            <div class="flex flex-col md:flex-row gap-4 items-center card-custom p-6 rounded-xl shadow-sm border">
                 <div class="w-full md:w-1/3">
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Longitud de la trenza final (cm):</label>
-                    <input type="number" id="calc-length" value="20" class="w-full border-2 border-indigo-200 rounded-lg p-3 text-lg focus:outline-none focus:border-indigo-500 font-bold text-indigo-900">
+                    <label class="block text-sm font-bold opacity-70 mb-2">Longitud final (cm):</label>
+                    <input type="number" id="calc-length" value="20" class="w-full border-2 border-indigo-200 rounded-lg p-3 text-lg focus:outline-none focus:border-indigo-500 font-bold bg-transparent">
                 </div>
                 <div class="w-full md:w-1/3 text-center">
                     <button onclick="calcularHilos()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow transition w-full">Calcular Medidas</button>
                 </div>
-                <div class="w-full md:w-1/3 bg-green-50 p-4 rounded-xl border border-green-200 text-center">
-                    <p class="text-sm text-green-800 font-semibold mb-1">Corta cada hilo de:</p>
-                    <p class="text-4xl font-black text-green-600 my-1" id="calc-result">60 cm</p>
-                    <p class="text-xs text-green-700 mt-2">Si doblas el hilo por la mitad, corta tiras de <span id="calc-result-double" class="font-bold">120</span> cm.</p>
+                <div class="w-full md:w-1/3 bg-green-500/10 p-4 rounded-xl border border-green-500/20 text-center">
+                    <p class="text-sm text-green-600 font-semibold mb-1">Corta cada hilo de:</p>
+                    <p class="text-4xl font-black text-green-500 my-1" id="calc-result">60 cm</p>
+                    <p class="text-xs opacity-60 mt-2">Si doblas el hilo por la mitad, corta tiras de <span id="calc-result-double" class="font-bold">120</span> cm.</p>
                 </div>
             </div>
         </section>
 
         <!-- Catálogo de Tejidos -->
         <section class="mb-12">
-            <h2 class="text-4xl font-bold text-center text-indigo-900 mb-10"><i class="fas fa-camera-retro text-indigo-500 mr-3"></i>Catálogo de Patrones Reales</h2>
+            <h2 class="text-4xl font-bold text-center mb-10"><i class="fas fa-camera-retro text-indigo-500 mr-3"></i>Catálogo de Patrones Reales</h2>
 
             <!-- TEJIDO 1 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+            <div class="card-custom rounded-2xl shadow-lg overflow-hidden mb-12 border">
                 <div class="bg-indigo-600 px-6 py-4 text-white flex justify-between items-center">
                     <h3 class="text-2xl font-bold">1. Trenza Redonda con Patrón (Kongo Gumi)</h3>
                     <span class="bg-indigo-800 text-xs px-3 py-1 rounded-full border border-indigo-400 font-semibold">8 Hilos</span>
                 </div>
                 <div class="p-8 grid md:grid-cols-2 gap-10">
                     <div>
-                        <div class="real-img-container mb-6">
+                        <div class="real-img-container mb-6 border-0 shadow-2xl">
                             <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/1.jpg" alt="Patrón Kumihimo 1">
                         </div>
-                        <h4 class="font-bold text-lg mb-3 text-gray-800 flex items-center"><i class="fas fa-crosshairs text-indigo-500 mr-2"></i> Posición Inicial</h4>
-                        <ul class="font-mono text-sm bg-gray-50 border border-gray-200 p-4 rounded-lg text-gray-700 shadow-inner">
+                        <h4 class="font-bold text-lg mb-3 flex items-center"><i class="fas fa-crosshairs text-indigo-500 mr-2"></i> Posición Inicial</h4>
+                        <ul class="font-mono text-sm bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-lg shadow-inner">
                             <li class="mb-1"><strong>Norte:</strong> 32 y 1</li><li class="mb-1"><strong>Este:</strong> 8 y 9</li>
                             <li class="mb-1"><strong>Sur:</strong> 16 y 17</li><li><strong>Oeste:</strong> 24 y 25</li>
                         </ul>
                     </div>
                     <div>
-                        <h4 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2 flex items-center"><i class="fas fa-sync-alt text-indigo-500 mr-2"></i> El Movimiento</h4>
-                        <ol class="list-decimal pl-5 space-y-4 text-gray-700">
+                        <h4 class="font-bold text-lg mb-4 border-b pb-2 flex items-center"><i class="fas fa-sync-alt text-indigo-500 mr-2"></i> El Movimiento</h4>
+                        <ol class="list-decimal pl-5 space-y-5 opacity-80">
                             <li>El hilo 1 baja a la ranura 15.</li>
                             <li>El hilo 17 sube a la ranura 31.</li>
                             <li>Gira el disco 90° a la izquierda.</li>
@@ -173,79 +225,79 @@
             </div>
 
             <!-- TEJIDO 2 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+            <div class="card-custom rounded-2xl shadow-lg overflow-hidden mb-12 border">
                 <div class="bg-pink-600 px-6 py-4 text-white flex justify-between items-center">
                     <h3 class="text-2xl font-bold">2. Patrón de Espiral de Color</h3>
                     <span class="bg-pink-800 text-xs px-3 py-1 rounded-full border border-pink-400 font-semibold">8 Hilos</span>
                 </div>
                 <div class="p-8 grid md:grid-cols-2 gap-10">
                     <div>
-                        <div class="real-img-container mb-6">
+                        <div class="real-img-container mb-6 border-0 shadow-2xl">
                             <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/2.jpg" alt="Patrón Kumihimo 2">
                         </div>
-                        <h4 class="font-bold text-lg mb-3 text-gray-800 flex items-center"><i class="fas fa-palette text-pink-500 mr-2"></i> Colores</h4>
-                        <ul class="font-mono text-sm bg-gray-50 border border-gray-200 p-4 rounded-lg text-gray-700 shadow-inner">
+                        <h4 class="font-bold text-lg mb-3 flex items-center"><i class="fas fa-palette text-pink-500 mr-2"></i> Colores</h4>
+                        <ul class="font-mono text-sm bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 p-4 rounded-lg shadow-inner">
                             <li class="mb-2"><span class="text-pink-600 font-bold">Color A:</span> N y S</li>
                             <li><span class="text-green-600 font-bold">Color B:</span> E y O</li>
                         </ul>
                     </div>
-                    <div class="flex flex-col justify-center text-gray-700">
+                    <div class="flex flex-col justify-center opacity-80">
                         <p>La espiral aparece sola al alternar colores en bloques opuestos. Es el diseño más popular por su contraste vibrante.</p>
                     </div>
                 </div>
             </div>
 
             <!-- TEJIDO 3 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+            <div class="card-custom rounded-2xl shadow-lg overflow-hidden mb-12 border">
                 <div class="bg-green-600 px-6 py-4 text-white flex justify-between items-center">
                     <h3 class="text-2xl font-bold">3. Trenza Cuadrada (Kaku Gumi)</h3>
                     <span class="bg-green-800 text-xs px-3 py-1 rounded-full border border-green-400 font-semibold">8 Hilos</span>
                 </div>
                 <div class="p-8 grid md:grid-cols-2 gap-10">
                     <div>
-                        <div class="real-img-container mb-6">
+                        <div class="real-img-container mb-6 border-0 shadow-2xl">
                             <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/3.jpg" alt="Patrón Kumihimo 3">
                         </div>
                     </div>
                     <div>
-                        <h4 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Estructura</h4>
-                        <p class="text-sm leading-relaxed text-gray-600">Produce una estructura de cuatro caras. Ideal para llaveros o pulseras de hombre. Recuerda que en este patrón no se gira el disco.</p>
+                        <h4 class="font-bold text-lg mb-4 border-b pb-2">Estructura</h4>
+                        <p class="text-sm leading-relaxed opacity-80">Produce una estructura de cuatro caras. Ideal para llaveros o pulseras de hombre. Recuerda que en este patrón no se gira el disco.</p>
                     </div>
                 </div>
             </div>
 
             <!-- TEJIDO 4 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+            <div class="card-custom rounded-2xl shadow-lg overflow-hidden mb-12 border">
                 <div class="bg-teal-600 px-6 py-4 text-white flex justify-between items-center">
                     <h3 class="text-2xl font-bold">4. Trenza Plana Cinta (Hira Gumi)</h3>
                     <span class="bg-teal-800 text-xs px-3 py-1 rounded-full border border-teal-400 font-semibold">10 Hilos</span>
                 </div>
                 <div class="p-8 grid md:grid-cols-2 gap-10">
                     <div>
-                        <div class="real-img-container mb-6">
+                        <div class="real-img-container mb-6 border-0 shadow-2xl">
                             <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/4.jpg" alt="Patrón Kumihimo 4">
                         </div>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-700">Perfecta para cintas o brazaletes anchos. Los hilos se mueven hacia el centro del grupo opuesto alternando lados derecho e izquierdo.</p>
+                        <p class="text-sm opacity-80">Perfecta para cintas o brazaletes anchos. Los hilos se mueven hacia el centro del grupo opuesto alternando lados derecho e izquierdo.</p>
                     </div>
                 </div>
             </div>
 
             <!-- TEJIDO 5 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+            <div class="card-custom rounded-2xl shadow-lg overflow-hidden border">
                 <div class="bg-purple-700 px-6 py-4 text-white flex justify-between items-center">
                     <h3 class="text-2xl font-bold">5. Kumihimo con Abalorios</h3>
                     <span class="bg-purple-900 text-xs px-3 py-1 rounded-full border border-purple-400 font-semibold">Avanzado</span>
                 </div>
                 <div class="p-8 grid md:grid-cols-2 gap-10">
                     <div>
-                        <div class="real-img-container mb-6">
+                        <div class="real-img-container mb-6 border-0 shadow-2xl">
                             <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/5.jpg" alt="Patrón Kumihimo 5">
                         </div>
                     </div>
                     <div>
-                        <p class="text-sm text-gray-700">Se logra insertando una cuenta antes de cada movimiento de hilo. El resultado es una pieza de joyería tubular de alta calidad.</p>
+                        <p class="text-sm opacity-80">Se logra insertando una cuenta antes de cada movimiento de hilo. El resultado es una pieza de joyería tubular de alta calidad.</p>
                     </div>
                 </div>
             </div>
@@ -255,14 +307,25 @@
     <footer class="bg-gray-900 text-gray-400 py-10 text-center border-t border-indigo-800">
         <div class="max-w-4xl mx-auto px-4">
             <p class="text-lg text-white font-semibold mb-2">Guía Maestra de Kumihimo</p>
-            <p class="text-sm mb-4">Un recurso para el taller personal de manualidades</p>
+            <p class="text-sm mb-4">Un recurso profesional para artesanos</p>
             <div class="h-px bg-indigo-500/20 w-1/4 mx-auto mb-4"></div>
-            <p class="text-xs uppercase tracking-widest text-indigo-400">Desarrollado y Creado por:</p>
+            <p class="text-xs uppercase tracking-widest text-indigo-400 mb-1">Desarrollado y Creado por:</p>
             <p class="text-md font-bold text-white">Juan Miguel Rios Redondo</p>
+            <p class="text-[10px] mt-4 opacity-30">© 2024 - Todos los derechos reservados</p>
         </div>
     </footer>
 
     <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('theme-icon');
+            if(document.body.classList.contains('dark-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
+
         function drawDisk(svgId) {
             const svgNS = "http://www.w3.org/2000/svg";
             const svg = document.getElementById(svgId);
