@@ -3,1009 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blanco Artesanal - Gestión Total</title>
+    <title>Mega Guía de Kumihimo: Disco, Patrones y Tejidos</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap');
         
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #f4f5f7;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, .jp-font {
+            font-family: 'Noto Serif JP', serif;
         }
 
-        .hide-scroll::-webkit-scrollbar { display: none; }
-        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .active-nav-tab {
-            border-bottom: 4px solid #16a34a;
-            color: #15803d;
-            background-color: #f0fdf4;
+        .hero-pattern {
+            background-color: #1e1b4b;
+            background-image: radial-gradient(#3730a3 1px, transparent 1px);
+            background-size: 20px 20px;
         }
-
-        .active-sub-tab {
-            background-color: #ea580c !important;
-            color: white !important;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-
-        /* Contenedor del sticker circular */
-        .sticker-wrapper {
-            box-sizing: border-box;
-            border-radius: 50% !important; /* Fuerza la forma circular */
+        
+        .slot-line { stroke: #1f2937; stroke-width: 3; stroke-linecap: round; }
+        .slot-text { font-family: 'Open Sans', sans-serif; font-weight: bold; font-size: 14px; fill: #1f2937; text-anchor: middle; dominant-baseline: middle; }
+        .guide-dot { fill: #dc2626; }
+        
+        .real-img-container {
+            width: 100%;
+            height: 18rem;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 2px solid #e5e7eb;
+            background-color: #f3f4f6;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: white;
-            break-inside: avoid;
-            overflow: hidden;
         }
-
-        /* Estilos Críticos para PDF */
-        body.pdf-exporting {
-            overflow: visible !important;
-            height: auto !important;
-            background: white !important;
-        }
-        body.pdf-exporting nav, 
-        body.pdf-exporting aside, 
-        body.pdf-exporting #main-content-registry,
-        body.pdf-exporting #main-content-calculadora {
-            display: none !important;
-        }
-        body.pdf-exporting #print-area {
-            display: block !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        @media print {
-            .no-print { display: none !important; }
-            #print-area { display: block !important; }
+        
+        .real-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="antialiased">
 
-    <!-- Navegación Principal -->
-    <nav class="bg-white border-b shadow-sm sticky top-0 z-30 no-print">
-        <div class="max-w-7xl mx-auto flex overflow-x-auto snap-x hide-scroll">
-            <button onclick="switchTab('etiquetas')" id="btn-nav-etiquetas" class="snap-start flex-shrink-0 flex items-center gap-2 px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 border-transparent text-gray-400">
-                <i data-lucide="tags"></i> Etiquetas
-            </button>
-            <button onclick="switchTab('calculadora')" id="btn-nav-calculadora" class="snap-start flex-shrink-0 flex items-center gap-2 px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 border-transparent text-gray-400">
-                <i data-lucide="calendar-days"></i> Vencimientos
-            </button>
-            <button onclick="switchTab('registro')" id="btn-nav-registro" class="snap-start flex-shrink-0 flex items-center gap-2 px-6 py-4 font-bold text-sm whitespace-nowrap border-b-4 active-nav-tab">
-                <i data-lucide="database"></i> Finanzas e Inventario
-            </button>
-        </div>
-    </nav>
-
-    <!-- SECCIÓN 1: ETIQUETAS -->
-    <main id="main-content-etiquetas" class="hidden flex-1 flex flex-col lg:flex-row h-[calc(100vh-56px)] overflow-hidden">
-        <aside class="w-full lg:w-[420px] bg-white border-r p-6 overflow-y-auto no-print shadow-xl z-20">
-            <div class="flex items-center gap-2 mb-6 text-green-700 border-b pb-4">
-                <i data-lucide="settings-2"></i>
-                <h1 class="text-xl font-black uppercase tracking-tighter">Panel Impresión</h1>
+    <!-- CONTENEDOR MAQUETADO PARA EL PDF -->
+    <div id="pdf-wrapper" style="display: none; position: absolute; top: 0; left: 0; width: 210mm; background: white; z-index: -1;">
+        <div id="pdf-container" style="width: 210mm; height: 297mm; padding: 2mm 20mm 0 20mm; box-sizing: border-box; font-family: Arial, sans-serif; background: white; margin: 0;">
+            
+            <div style="text-align: center; margin-bottom: 15px;">
+                <h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0; text-transform: uppercase;">Plantilla de Fabricación</h1>
+                <h2 style="font-size: 16px; color: #dc2626; margin: 0 0 5px 0; font-weight: normal;">Disco Kumihimo (Mobidai) de 32 Ranuras</h2>
+                <p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p>
             </div>
             
-            <div class="space-y-6">
-                <section>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">1. Tamaño de Papel</label>
-                    <select id="paper-type" onchange="renderLabels()" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold">
-                        <option value="A4">A4 (210x297mm)</option>
-                        <option value="Letter">Carta (215.9x279.4mm)</option>
-                        <option value="A3">A3 (297x420mm)</option>
-                        <option value="Custom">Personalizado (Auto-ajuste)</option>
-                    </select>
-                </section>
-
-                <section>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">2. Tamaño Sticker</label>
-                    <div id="sticker-grid" class="grid grid-cols-3 gap-2"></div>
-                </section>
-
-                <section>
-                    <label class="text-[10px] font-black text-gray-400 uppercase mb-2 block tracking-widest">3. Cantidad Deseada</label>
-                    <input type="number" id="target-qty" oninput="renderLabels()" class="w-full p-4 border-2 border-green-100 rounded-xl text-xl font-bold text-green-800 outline-none focus:border-green-500" placeholder="Ej: 50">
-                </section>
-
-                <div class="bg-green-900 text-white p-5 rounded-2xl shadow-lg border-b-4 border-black">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-green-700 pb-2 text-green-300">Resumen</h3>
-                    <div class="grid grid-cols-2 gap-y-3 text-xs">
-                        <span class="opacity-70">Stickers/fila:</span><span id="res-fila" class="font-bold text-right">0</span>
-                        <span class="opacity-70">Total stickers:</span><span id="res-total" class="font-bold text-right text-green-300 text-base leading-none">0</span>
-                    </div>
+            <div style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; border: 2px solid #e5e7eb; padding: 15px; border-radius: 10px; background-color: #f9fafb;">
+                <div style="flex: 1;">
+                    <h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🧵 Materiales:</h3>
+                    <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;">
+                        <li>Goma Eva (Foami) gruesa de 3-5mm.</li>
+                        <li>Tijeras, Cúter y pegamento.</li>
+                        <li>Hilo cola de ratón o algodón.</li>
+                        <li>Peso para el nudo central.</li>
+                    </ul>
                 </div>
-
-                <div class="flex items-center gap-2 p-4 bg-pink-50 rounded-xl border border-pink-100 text-xs font-bold text-pink-700 cursor-pointer" onclick="toggleCutLine()">
-                    <input type="checkbox" id="check-cutline" checked class="accent-pink-500 w-4 h-4">
-                    <i data-lucide="scissors"></i> Guía de troquelado
-                </div>
-
-                <button onclick="generatePDF()" id="btn-pdf-gen" class="w-full py-4 bg-green-600 hover:bg-green-700 text-white rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all">
-                    <i data-lucide="download"></i> GUARDAR PDF EXACTO
-                </button>
-            </div>
-        </aside>
-        <div id="print-area" class="flex-1 bg-slate-300 overflow-auto p-4 sm:p-8 print:p-0 print:bg-white flex flex-col items-center gap-8"></div>
-    </main>
-
-    <!-- SECCIÓN 2: CALCULADORA -->
-    <main id="main-content-calculadora" class="hidden p-4 lg:p-10 max-w-4xl mx-auto space-y-6">
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-            <h1 class="text-xl md:text-2xl font-black text-blue-900 mb-6 flex items-center gap-3"><i data-lucide="calendar-days"></i> Calculadora Vencimientos</h1>
-            <input type="date" id="calc-date-input" onchange="updateVencimientos()" class="w-full p-4 border-2 border-blue-50 rounded-xl text-lg md:text-xl font-bold outline-none focus:border-blue-400">
-        </div>
-        <div id="vencimientos-results" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-    </main>
-
-    <!-- SECCIÓN 3: REGISTRO / FINANZAS -->
-    <main id="main-content-registro" class="p-4 lg:p-10 max-w-6xl mx-auto space-y-6">
-        <!-- Sub-Navegación Registro -->
-        <div class="flex overflow-x-auto gap-2 mb-6 snap-x hide-scroll pb-2 no-print">
-            <button onclick="switchSubTab('lotes')" id="subnav-lotes" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-2 active-sub-tab">
-                <i data-lucide="beaker"></i> 1. Hacer Lote
-            </button>
-            <button onclick="switchSubTab('nevera')" id="subnav-nevera" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200">
-                <i data-lucide="store"></i> 2. Nevera y Ventas
-            </button>
-            <button onclick="switchSubTab('bodega')" id="subnav-bodega" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200">
-                <i data-lucide="box"></i> Bodega Insumos
-            </button>
-            <button onclick="switchSubTab('historial')" id="subnav-historial" class="snap-start flex-shrink-0 px-4 py-3 rounded-xl font-bold text-sm flex items-center gap-2 bg-white text-gray-500 border border-gray-200">
-                <i data-lucide="trending-up"></i> Historial Real
-            </button>
-        </div>
-
-        <!-- HACER LOTE -->
-        <div id="subtab-content-lotes" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-orange-100">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-base font-black text-orange-900 flex items-center gap-2"><i data-lucide="beaker"></i> Insumos Usados</h2>
-                        <input type="date" id="batch-date-input" class="p-2 border rounded-lg text-sm font-bold text-gray-500">
-                    </div>
-                    <div id="ingredients-inputs" class="space-y-4"></div>
-                    <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 mt-4 text-center">
-                        <p class="text-[10px] font-black text-orange-600 uppercase mb-1">Costo Base Lote:</p>
-                        <p id="label-costo-base" class="text-2xl font-black text-orange-900">$0</p>
-                    </div>
+                <div style="flex: 1;">
+                    <h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🛠️ Instrucciones:</h3>
+                    <ol style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;">
+                        <li>Imprime a escala 100%.</li>
+                        <li>Pega el círculo sobre la Goma Eva.</li>
+                        <li>Recorta el borde y el centro.</li>
+                        <li>Corta las 32 líneas negras.</li>
+                    </ol>
                 </div>
             </div>
-            <div class="lg:col-span-7 space-y-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h2 class="text-base font-black text-gray-800 mb-4 flex items-center gap-2"><i data-lucide="box"></i> 2. Empacados (A Nevera)</h2>
-                    <div class="bg-gray-50 p-4 rounded-2xl mb-4 border border-gray-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <select id="input-prod-type" class="p-3 border rounded-xl font-bold text-sm">
-                            <option>Griego Natural</option>
-                            <option selected>Griego con Fruta</option>
-                            <option>Yogur Líquido</option>
-                        </select>
-                        <select id="input-prod-size" onchange="suggestBatchPrice()" class="p-3 border rounded-xl font-bold text-sm"></select>
-                        <input type="number" id="input-prod-qty" placeholder="Unidades" class="p-3 border rounded-xl font-bold">
-                        <input type="number" id="input-prod-price" placeholder="P. Venta Esperado" class="p-3 border rounded-xl font-bold text-green-700">
-                        <button onclick="addCurrentProduct()" class="sm:col-span-2 py-4 bg-orange-600 text-white rounded-xl font-black uppercase shadow-md flex items-center justify-center gap-2">
-                            <i data-lucide="plus-circle"></i> Añadir al Lote
-                        </button>
-                    </div>
-                    <div class="overflow-x-auto border rounded-xl">
-                        <table class="w-full text-left text-xs min-w-[400px]">
-                            <thead class="bg-gray-100 font-black border-b text-[10px] uppercase text-gray-500">
-                                <tr><th class="p-3">Producto</th><th class="p-3">Cant.</th><th class="p-3">C. Empaque</th><th class="p-3">Venta Est.</th><th class="p-3"></th></tr>
-                            </thead>
-                            <tbody id="batch-table-body" class="divide-y bg-white"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="bg-orange-100 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 border border-orange-200">
-                  <div class="text-center md:text-left">
-                    <p class="text-[10px] font-bold uppercase tracking-widest text-orange-900 mb-1">Inversión Total del Lote</p>
-                    <p id="label-inversion-total" class="text-3xl font-black text-orange-900">$0</p>
-                  </div>
-                  <button onclick="confirmProduction()" class="w-full md:w-auto py-5 px-8 bg-orange-600 text-white rounded-xl font-black uppercase shadow-xl flex items-center justify-center gap-2 transition-all active:scale-95">
-                    <i data-lucide="save"></i> Enviar a Nevera
-                  </button>
-                </div>
-            </div>
-        </div>
 
-        <!-- NEVERA Y VENTAS -->
-        <div id="subtab-content-nevera" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-7 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b flex justify-between items-center bg-blue-50/50">
-                    <h2 class="text-lg font-black text-blue-900 uppercase tracking-tighter flex items-center gap-2"><i data-lucide="store"></i> Stock en Nevera</h2>
-                </div>
-                <div id="fridge-items-grid" class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
-            </div>
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 sticky top-24">
-                    <h2 class="text-xl font-black text-gray-800 mb-6 flex items-center gap-2"><i data-lucide="dollar-sign"></i> Registrar Salida</h2>
-                    <div class="space-y-4">
-                        <select id="sale-product-key" onchange="updateSalePricePlaceholder()" class="w-full p-4 border rounded-xl font-bold bg-gray-50 text-sm"></select>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="number" id="input-sale-qty" placeholder="Cant." class="p-4 border rounded-xl font-bold text-center">
-                            <select id="select-sale-type" class="p-4 border rounded-xl font-bold text-sm bg-gray-50">
-                                <option value="venta">Venta Exitosa</option>
-                                <option value="merma">Merma / Daño</option>
-                            </select>
-                        </div>
-                        <input type="number" id="input-sale-price" placeholder="P. Venta Real Unitario" class="w-full p-4 border rounded-xl font-black text-green-700 text-xl">
-                        <button onclick="registerSale()" class="w-full py-5 bg-green-600 text-white rounded-xl font-black uppercase shadow-lg transition-all active:scale-95">Confirmar Salida</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- BODEGA INSUMOS -->
-        <div id="subtab-content-bodega" class="hidden space-y-8">
-            <div id="inventory-summary-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
-            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
-                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 border-b pb-4">
-                    <h2 class="text-lg font-black text-gray-800 flex items-center gap-2"><i data-lucide="shopping-cart"></i> Comprar Insumo</h2>
-                    <button onclick="openResetModal()" class="text-red-500 bg-red-50 px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 border border-red-100 hover:bg-red-100 transition-all">
-                        <i data-lucide="trash-2"></i> Reiniciar Bodega
-                    </button>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Insumo / Empaque</label>
-                        <select id="select-buy-item" class="w-full p-4 border rounded-xl font-bold bg-gray-50 text-sm"></select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Cantidad</label>
-                        <input type="number" step="any" id="input-buy-qty" class="w-full p-4 border rounded-xl font-bold">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black text-gray-400 uppercase mb-1 block">Costo Unitario ($)</label>
-                        <input type="number" id="input-buy-unitcost" class="w-full p-4 border rounded-xl font-bold text-green-700">
-                    </div>
-                    <button onclick="registerPurchase()" class="bg-slate-700 text-white font-bold py-4 rounded-xl shadow-md transition-all active:scale-95">Guardar</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- HISTORIAL REAL -->
-        <div id="subtab-content-historial" class="hidden space-y-6">
-            <div class="flex gap-2 border-b pb-4 overflow-x-auto hide-scroll no-print">
-                <button onclick="setHistoryView('finanzas')" id="hview-finanzas" class="px-5 py-3 rounded-xl font-bold text-sm active-sub-tab bg-gray-100 text-gray-500">Resumen y Ventas</button>
-                <button onclick="setHistoryView('lotes')" id="hview-lotes" class="px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500">Trazabilidad de Lotes</button>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <svg id="kumihimo-disk-print" width="175mm" height="175mm" viewBox="0 0 400 400" style="display: block; margin: 0 auto;"></svg>
             </div>
             
-            <div id="hview-finanzas-content" class="space-y-6">
-                <div id="kpi-dashboard" class="grid grid-cols-2 md:grid-cols-5 gap-4"></div>
-                <div id="star-product-metrics" class="bg-blue-50 border border-blue-100 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row gap-6 items-center"></div>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col">
-                        <div class="p-5 border-b bg-gray-50/50 font-black text-sm uppercase flex items-center justify-between"><span class="flex items-center gap-2"><i data-lucide="wallet"></i> Gastos Fijos</span></div>
-                        <div class="p-5 border-b bg-orange-50/50 flex flex-col sm:flex-row gap-2">
-                            <input type="text" id="input-expense-desc" placeholder="Descripción" class="flex-1 p-2 border rounded-lg text-xs font-bold">
-                            <div class="flex gap-2">
-                                <input type="number" id="input-expense-amt" placeholder="$" class="w-full sm:w-24 p-2 border rounded-lg text-xs font-bold">
-                                <button onclick="addFixedExpense()" class="bg-orange-500 text-white px-3 py-2 rounded-lg font-bold"><i data-lucide="plus"></i></button>
-                            </div>
-                        </div>
-                        <div id="list-fixed-expenses" class="p-4 max-h-80 overflow-y-auto space-y-2"></div>
-                    </div>
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col">
-                        <div class="p-5 border-b bg-gray-50/50 font-black text-sm uppercase"><i data-lucide="clipboard-list" class="inline w-4 h-4 mr-2"></i> Registro Salidas Reales</div>
-                        <div id="list-sales-merma" class="p-4 max-h-96 overflow-y-auto space-y-3"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="hview-lotes-content" class="hidden space-y-4">
-                <div id="list-batch-traceability" class="space-y-4"></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modal Reinicio -->
-    <div id="modal-confirm-reset" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 backdrop-blur-sm p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center border border-red-100">
-            <i data-lucide="alert-triangle" class="mx-auto text-red-500 mb-6 w-16 h-16"></i>
-            <h3 class="text-2xl font-black text-gray-800 mb-3">¿Reiniciar Bodega?</h3>
-            <p class="text-sm text-gray-500 mb-8">Esta acción pondrá todos los insumos en 0. <b>No se puede deshacer.</b></p>
-            <div class="flex flex-col gap-3">
-                <button onclick="resetEverything()" class="py-4 bg-red-600 text-white rounded-xl font-bold shadow-lg shadow-red-200 transition-all active:scale-95">Sí, borrar todo</button>
-                <button onclick="closeResetModal()" class="py-4 bg-gray-100 text-gray-700 rounded-xl font-bold">Cancelar</button>
+            <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #6b7280; font-style: italic;">
+                *La tensión uniforme es la clave del éxito. Propiedad de: Juan Miguel Rios Redondo.
             </div>
         </div>
     </div>
 
-    <script>
-        // --- MOTOR DE ESTADO ---
-        let state = {
-            activeTab: 'registro',
-            activeFinanceTab: 'lotes',
-            historyView: 'finanzas',
-            stickerSize: '10oz',
-            paperType: 'A4',
-            showCutLine: true,
-            currentBatchProducts: [],
-            inventory: {
-                leche: { name: 'Leche Entera', unit: 'Cajas (900ml)', stock: 100, avgCost: 3200, minStock: 10 },
-                azucar: { name: 'Azúcar', unit: 'kg', stock: 25, avgCost: 4000, minStock: 5 }, 
-                polvo: { name: 'Leche en Polvo', unit: 'kg', stock: 10, avgCost: 25000, minStock: 2 },
-                fresas: { name: 'Fresas', unit: 'Empaques (300g)', stock: 10, avgCost: 5000, minStock: 3 },
-                kumis: { name: 'Kumis', unit: 'Unidades', stock: 15, avgCost: 2500, minStock: 5 },
-                limon: { name: 'Limón', unit: 'Unidades', stock: 30, avgCost: 500, minStock: 10 },
-                envase_5oz: { name: 'Envases 5oz', unit: 'Unidades', stock: 500, avgCost: 520, minStock: 50 },
-                envase_10oz: { name: 'Envases 10oz', unit: 'Unidades', stock: 500, avgCost: 560, minStock: 50 },
-                envase_16oz: { name: 'Envases 16oz', unit: 'Unidades', stock: 200, avgCost: 480, minStock: 50 },
-                envase_32oz: { name: 'Envases 32oz', unit: 'Unidades', stock: 100, avgCost: 680, minStock: 30 },
-                envase_1lt: { name: 'Envases 1 Lt', unit: 'Unidades', stock: 50, avgCost: 1200, minStock: 20 },
-                envase_2lt: { name: 'Envases 2 Lt', unit: 'Unidades', stock: 50, avgCost: 1800, minStock: 20 }
-            },
-            fridge: {},
-            salesLogs: [],
-            expenses: [],
-            productionLogs: []
-        };
+    <!-- Header Web -->
+    <header class="hero-pattern text-white py-12 px-4 shadow-lg border-b-4 border-red-600 relative overflow-hidden">
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">Masterclass de Kumihimo <span class="text-red-400 jp-font">(組み紐)</span></h1>
+            <p class="text-xl text-indigo-200 mb-4">Guía de Tejidos y Plantilla Imprimible</p>
+            <div class="inline-block bg-indigo-900/50 backdrop-blur-sm px-6 py-2 rounded-full border border-indigo-500/30">
+                <p class="text-sm font-semibold tracking-wider text-indigo-100 uppercase">: <span class="text-white"></span></p>
+            </div>
+        </div>
+    </header>
 
-        const stickerSizes = { '5oz': 45, '10oz': 55, '16oz': 65, '32oz': 85, '1lt': 95, '2lt': 110 };
-        const defaultSalePrices = { '5oz': 8000, '10oz': 15000, '16oz': 25000, '32oz': 45000, '1lt': 11000, '2lt': 20000 };
+    <section class="max-w-5xl mx-auto px-4 py-12">
+        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 w-full flex flex-col items-center">
+            <div class="text-center mb-8 w-full">
+                <h2 class="text-3xl font-bold text-indigo-900 mb-4 border-b-2 border-indigo-100 pb-2">Tu Disco Mobidai (PDF)</h2>
+                <p class="text-gray-600 mb-6 max-w-2xl mx-auto">
+                    Haz clic en el botón para descargar tu plantilla corregida y personalizada.
+                </p>
+                <button onclick="descargarPDF()" id="btn-descargar" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform hover:scale-105 flex items-center justify-center mx-auto">
+                    <i class="fas fa-file-pdf mr-3 text-xl"></i> <span>Descargar Plantilla de Juan Miguel</span>
+                </button>
+            </div>
+            <svg id="kumihimo-disk" width="400" height="400" viewBox="0 0 400 400" class="mx-auto bg-white rounded-full shadow-sm" style="max-width: 100%; height: auto;"></svg>
+        </div>
+    </section>
 
-        // --- NAVEGACIÓN ---
-        function switchTab(tab) {
-            state.activeTab = tab;
-            document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
-            const mainContent = document.getElementById(`main-content-${tab}`);
-            if (mainContent) mainContent.classList.remove('hidden');
-            
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active-nav-tab'));
-            const navBtn = document.getElementById(`btn-nav-${tab}`);
-            if (navBtn) navBtn.classList.add('active-nav-tab');
-            
-            if(tab === 'etiquetas') renderLabels();
-            if(tab === 'calculadora') updateVencimientos();
-            if(tab === 'registro') renderFinance();
-            lucide.createIcons();
-        }
+    <main class="max-w-5xl mx-auto px-4 py-8">
+        <!-- Calculadora -->
+        <section class="mb-12 bg-indigo-50 p-8 rounded-2xl shadow-inner border border-indigo-100">
+            <h2 class="text-2xl font-bold text-indigo-900 mb-4"><i class="fas fa-calculator text-indigo-500 mr-3"></i>Calculadora de Hilos</h2>
+            <div class="flex flex-col md:flex-row gap-4 items-center bg-white p-6 rounded-xl shadow-sm">
+                <div class="w-full md:w-1/3">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Longitud de la trenza final (cm):</label>
+                    <input type="number" id="calc-length" value="20" class="w-full border-2 border-indigo-200 rounded-lg p-3 text-lg focus:outline-none focus:border-indigo-500 font-bold text-indigo-900">
+                </div>
+                <div class="w-full md:w-1/3 text-center">
+                    <button onclick="calcularHilos()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow transition w-full">Calcular Medidas</button>
+                </div>
+                <div class="w-full md:w-1/3 bg-green-50 p-4 rounded-xl border border-green-200 text-center">
+                    <p class="text-sm text-green-800 font-semibold mb-1">Corta cada hilo de:</p>
+                    <p class="text-4xl font-black text-green-600 my-1" id="calc-result">60 cm</p>
+                    <p class="text-xs text-green-700 mt-2">Si doblas el hilo por la mitad, corta tiras de <span id="calc-result-double" class="font-bold">120</span> cm.</p>
+                </div>
+            </div>
+        </section>
 
-        function switchSubTab(sub) {
-            state.activeFinanceTab = sub;
-            ['lotes', 'nevera', 'bodega', 'historial'].forEach(t => {
-                const subContent = document.getElementById(`subtab-content-${t}`);
-                if (subContent) subContent.classList.add('hidden');
-                const subBtn = document.getElementById(`subnav-${t}`);
-                if (subBtn) subBtn.classList.remove('active-sub-tab');
-            });
-            const activeSubContent = document.getElementById(`subtab-content-${sub}`);
-            if (activeSubContent) activeSubContent.classList.remove('hidden');
-            const activeSubBtn = document.getElementById(`subnav-${sub}`);
-            if (activeSubBtn) activeSubBtn.classList.add('active-sub-tab');
-            renderFinance();
-        }
+        <!-- Catálogo de Tejidos -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-center text-indigo-900 mb-10"><i class="fas fa-camera-retro text-indigo-500 mr-3"></i>Catálogo de Patrones Reales</h2>
 
-        // --- ETIQUETAS ---
-        function renderLabels() {
-            const container = document.getElementById('print-area');
-            if (!container) return;
-
-            const d = stickerSizes[state.stickerSize];
-            const pType = document.getElementById('paper-type').value;
-            const target = parseInt(document.getElementById('target-qty').value) || 0;
-            const margin = 3;
-            const padding = 10;
-            
-            let w = 210, h = 297;
-            if(pType === 'Letter') { w = 215.9; h = 279.4; }
-            if(pType === 'A3') { w = 297; h = 420; }
-            
-            const cols = Math.floor((w - padding) / (d + margin)) || 1;
-            let finalQty = target;
-            if(finalQty > 0 && finalQty % cols !== 0) finalQty += (cols - (finalQty % cols));
-
-            if(pType === 'Custom') {
-                const rows = Math.ceil((finalQty || 1) / cols);
-                h = (rows * (d + margin)) + padding;
-            }
-
-            document.getElementById('res-fila').innerText = cols;
-            document.getElementById('res-total').innerText = finalQty || 'Auto';
-
-            container.innerHTML = '';
-            let left = finalQty || (cols * Math.floor((h - padding) / (d + margin)));
-            const stickersPerPage = cols * Math.floor((h - padding) / (d + margin));
-            const numPages = pType === 'Custom' ? 1 : Math.ceil(left / stickersPerPage);
-
-            for(let p = 0; p < numPages; p++) {
-                const page = document.createElement('div');
-                page.className = "bg-white shadow-2xl relative page-sheet flex flex-wrap content-start overflow-hidden";
-                page.style.width = w + "mm";
-                page.style.height = h + "mm";
-                page.style.padding = "5mm";
-                page.style.gap = margin + "mm";
-                
-                const count = pType === 'Custom' ? left : Math.min(left, stickersPerPage);
-                for(let i=0; i<count; i++) { page.innerHTML += getStickerHTML(d); }
-                container.appendChild(page);
-                left -= count;
-            }
-        }
-
-        function getStickerHTML(d) {
-            const scale = d / 55;
-            const logo = 'https://raw.githubusercontent.com/juanmiguel0927/PedidosBlancoArtesanal/ca1c2c4df24364a5c325f8426a4e483e0b2874bd/Logo.jpg';
-            const borderStyle = state.showCutLine ? 'border: 0.15mm solid #ff00ff; border-radius: 50%;' : 'border: 0.15mm solid transparent; border-radius: 50%;';
-            return `
-                <div class="sticker-wrapper" style="width:${d}mm; height:${d}mm; ${borderStyle}">
-                    <div style="width: 100%; height: 100%; background: white; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; border: ${0.4 * scale}mm solid #7cb342; padding: ${1 * scale}mm; box-sizing: border-box;">
-                        <div style="width: 100%; height: 75%; display: flex; align-items: center; justify-content: center; padding-top: ${2 * scale}mm; overflow: hidden;">
-                            <img src="${logo}" style="width: 90%; height: 100%; object-fit: contain;">
+            <!-- TEJIDO 1 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+                <div class="bg-indigo-600 px-6 py-4 text-white flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">1. Trenza Redonda con Patrón (Kongo Gumi)</h3>
+                    <span class="bg-indigo-800 text-xs px-3 py-1 rounded-full border border-indigo-400 font-semibold">8 Hilos</span>
+                </div>
+                <div class="p-8 grid md:grid-cols-2 gap-10">
+                    <div>
+                        <div class="real-img-container mb-6">
+                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/1.jpg" alt="Patrón Kumihimo 1">
                         </div>
-                        <div style="width: 60%; height: ${0.3 * scale}mm; background: #7cb342; margin: ${1 * scale}mm 0;"></div>
-                        <div style="width: 100%; text-align: center; color: #1b4332; font-weight: 900; font-family: sans-serif; font-size: ${Math.floor(8.5 * scale)}px; line-height: 1.2;">
-                            LOTE: ____________<br>VENCE: ____________
+                        <h4 class="font-bold text-lg mb-3 text-gray-800 flex items-center"><i class="fas fa-crosshairs text-indigo-500 mr-2"></i> Posición Inicial</h4>
+                        <ul class="font-mono text-sm bg-gray-50 border border-gray-200 p-4 rounded-lg text-gray-700 shadow-inner">
+                            <li class="mb-1"><strong>Norte:</strong> 32 y 1</li><li class="mb-1"><strong>Este:</strong> 8 y 9</li>
+                            <li class="mb-1"><strong>Sur:</strong> 16 y 17</li><li><strong>Oeste:</strong> 24 y 25</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2 flex items-center"><i class="fas fa-sync-alt text-indigo-500 mr-2"></i> El Movimiento</h4>
+                        <ol class="list-decimal pl-5 space-y-4 text-gray-700">
+                            <li>El hilo 1 baja a la ranura 15.</li>
+                            <li>El hilo 17 sube a la ranura 31.</li>
+                            <li>Gira el disco 90° a la izquierda.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEJIDO 2 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+                <div class="bg-pink-600 px-6 py-4 text-white flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">2. Patrón de Espiral de Color</h3>
+                    <span class="bg-pink-800 text-xs px-3 py-1 rounded-full border border-pink-400 font-semibold">8 Hilos</span>
+                </div>
+                <div class="p-8 grid md:grid-cols-2 gap-10">
+                    <div>
+                        <div class="real-img-container mb-6">
+                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/2.jpg" alt="Patrón Kumihimo 2">
+                        </div>
+                        <h4 class="font-bold text-lg mb-3 text-gray-800 flex items-center"><i class="fas fa-palette text-pink-500 mr-2"></i> Colores</h4>
+                        <ul class="font-mono text-sm bg-gray-50 border border-gray-200 p-4 rounded-lg text-gray-700 shadow-inner">
+                            <li class="mb-2"><span class="text-pink-600 font-bold">Color A:</span> N y S</li>
+                            <li><span class="text-green-600 font-bold">Color B:</span> E y O</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col justify-center text-gray-700">
+                        <p>La espiral aparece sola al alternar colores en bloques opuestos. Es el diseño más popular por su contraste vibrante.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEJIDO 3 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+                <div class="bg-green-600 px-6 py-4 text-white flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">3. Trenza Cuadrada (Kaku Gumi)</h3>
+                    <span class="bg-green-800 text-xs px-3 py-1 rounded-full border border-green-400 font-semibold">8 Hilos</span>
+                </div>
+                <div class="p-8 grid md:grid-cols-2 gap-10">
+                    <div>
+                        <div class="real-img-container mb-6">
+                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/3.jpg" alt="Patrón Kumihimo 3">
                         </div>
                     </div>
-                </div>`;
-        }
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-gray-800 border-b pb-2">Estructura</h4>
+                        <p class="text-sm leading-relaxed text-gray-600">Produce una estructura de cuatro caras. Ideal para llaveros o pulseras de hombre. Recuerda que en este patrón no se gira el disco.</p>
+                    </div>
+                </div>
+            </div>
 
-        async function generatePDF() {
-            const btn = document.getElementById('btn-pdf-gen');
+            <!-- TEJIDO 4 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+                <div class="bg-teal-600 px-6 py-4 text-white flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">4. Trenza Plana Cinta (Hira Gumi)</h3>
+                    <span class="bg-teal-800 text-xs px-3 py-1 rounded-full border border-teal-400 font-semibold">10 Hilos</span>
+                </div>
+                <div class="p-8 grid md:grid-cols-2 gap-10">
+                    <div>
+                        <div class="real-img-container mb-6">
+                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/4.jpg" alt="Patrón Kumihimo 4">
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-700">Perfecta para cintas o brazaletes anchos. Los hilos se mueven hacia el centro del grupo opuesto alternando lados derecho e izquierdo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEJIDO 5 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                <div class="bg-purple-700 px-6 py-4 text-white flex justify-between items-center">
+                    <h3 class="text-2xl font-bold">5. Kumihimo con Abalorios</h3>
+                    <span class="bg-purple-900 text-xs px-3 py-1 rounded-full border border-purple-400 font-semibold">Avanzado</span>
+                </div>
+                <div class="p-8 grid md:grid-cols-2 gap-10">
+                    <div>
+                        <div class="real-img-container mb-6">
+                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/5.jpg" alt="Patrón Kumihimo 5">
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-700">Se logra insertando una cuenta antes de cada movimiento de hilo. El resultado es una pieza de joyería tubular de alta calidad.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-10 text-center border-t border-indigo-800">
+        <div class="max-w-4xl mx-auto px-4">
+            <p class="text-lg text-white font-semibold mb-2">Guía Maestra de Kumihimo</p>
+            <p class="text-sm mb-4">Un recurso para el taller personal de manualidades</p>
+            <div class="h-px bg-indigo-500/20 w-1/4 mx-auto mb-4"></div>
+            <p class="text-xs uppercase tracking-widest text-indigo-400">Desarrollado y Creado por:</p>
+            <p class="text-md font-bold text-white">Juan Miguel Rios Redondo</p>
+        </div>
+    </footer>
+
+    <script>
+        function drawDisk(svgId) {
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.getElementById(svgId);
+            const cx = 200; const cy = 200; const radius = 180; const holeRadius = 35;
+            while (svg.firstChild) { svg.removeChild(svg.firstChild); }
+            const outerCircle = document.createElementNS(svgNS, "circle");
+            outerCircle.setAttribute("cx", cx); outerCircle.setAttribute("cy", cy); outerCircle.setAttribute("r", radius);
+            outerCircle.setAttribute("fill", "none"); outerCircle.setAttribute("stroke", "#1f2937"); outerCircle.setAttribute("stroke-width", "4"); outerCircle.setAttribute("stroke-dasharray", "10, 5"); 
+            svg.appendChild(outerCircle);
+            const innerCircle = document.createElementNS(svgNS, "circle");
+            innerCircle.setAttribute("cx", cx); innerCircle.setAttribute("cy", cy); innerCircle.setAttribute("r", holeRadius);
+            innerCircle.setAttribute("fill", "none"); innerCircle.setAttribute("stroke", "#1f2937"); innerCircle.setAttribute("stroke-width", "3"); innerCircle.setAttribute("stroke-dasharray", "5, 5");
+            svg.appendChild(innerCircle);
+            const directions = [{ text: "NORTE", angle: -90 }, { text: "ESTE", angle: 0 }, { text: "SUR", angle: 90 }, { text: "OESTE", angle: 180 }];
+            directions.forEach(dir => {
+                const rad = dir.angle * (Math.PI / 180);
+                const tx = cx + 70 * Math.cos(rad); const ty = cy + 70 * Math.sin(rad);
+                const text = document.createElementNS(svgNS, "text");
+                text.setAttribute("x", tx); text.setAttribute("y", ty); text.setAttribute("fill", "#6b7280"); text.setAttribute("font-size", "14px"); text.setAttribute("font-weight", "bold");
+                text.setAttribute("text-anchor", "middle"); text.setAttribute("dominant-baseline", "middle");
+                text.textContent = dir.text; svg.appendChild(text);
+            });
+            for (let i = 1; i <= 32; i++) {
+                let angleDegrees = -90 + 5.625 + ((i - 1) * 11.25);
+                let angleRad = angleDegrees * (Math.PI / 180);
+                let x1 = cx + (radius - 25) * Math.cos(angleRad); let y1 = cy + (radius - 25) * Math.sin(angleRad);
+                let x2 = cx + radius * Math.cos(angleRad); let y2 = cy + radius * Math.sin(angleRad);
+                const line = document.createElementNS(svgNS, "line");
+                line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+                line.setAttribute("class", "slot-line"); svg.appendChild(line);
+                let tx = cx + (radius - 45) * Math.cos(angleRad); let ty = cy + (radius - 45) * Math.sin(angleRad);
+                const text = document.createElementNS(svgNS, "text");
+                text.setAttribute("x", tx); text.setAttribute("y", ty); text.setAttribute("class", "slot-text");
+                text.textContent = i; svg.appendChild(text);
+            }
+            const dotAngles = [-90, 0, 90, 180];
+            dotAngles.forEach(angle => {
+                let dotRad = angle * (Math.PI / 180);
+                let dx = cx + 115 * Math.cos(dotRad); let dy = cy + 115 * Math.sin(dotRad);
+                const dot = document.createElementNS(svgNS, "circle");
+                dot.setAttribute("cx", dx); dot.setAttribute("cy", dy); dot.setAttribute("r", "4");
+                dot.setAttribute("class", "guide-dot"); dot.setAttribute("fill", "#ef4444");
+                svg.appendChild(dot);
+            });
+        }
+        drawDisk("kumihimo-disk"); drawDisk("kumihimo-disk-print");
+        function calcularHilos() {
+            const length = document.getElementById('calc-length').value;
+            const singleThread = Math.ceil(length * 3);
+            document.getElementById('calc-result').textContent = singleThread + " cm";
+            document.getElementById('calc-result-double').textContent = singleThread * 2;
+        }
+        function descargarPDF() {
+            const wrapper = document.getElementById('pdf-wrapper');
+            const element = document.getElementById('pdf-container');
+            const btn = document.getElementById('btn-descargar');
             const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<span class="animate-spin mr-2">...</span> GENERANDO';
-            
-            // Forzar el scroll al inicio absoluto para que html2canvas capture desde 0,0
+            const currentScroll = window.scrollY;
+            wrapper.style.display = 'block';
             window.scrollTo(0, 0);
-            
-            document.body.classList.add('pdf-exporting');
-            
-            const firstSheet = document.querySelector('.page-sheet');
-            if (!firstSheet) {
-                document.body.classList.remove('pdf-exporting');
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-                return;
-            }
-
-            const w = parseFloat(firstSheet.style.width);
-            const h = parseFloat(firstSheet.style.height);
-
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i> <span>Generando...</span>';
+            btn.disabled = true;
             const opt = {
-                margin: 0,
-                filename: 'Blanco_Artesanal_Etiquetas.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2, 
-                    useCORS: true, 
-                    backgroundColor: '#ffffff',
-                    scrollY: 0, // Inicia captura en el tope del elemento
-                    windowScrollY: 0 // Inicia captura en el tope de la ventana
-                },
-                jsPDF: { unit: 'mm', format: [w, h], orientation: 'portrait', compress: true }
+                margin: 0, filename: 'Plantilla_Kumihimo_Rios.pdf', image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, width: 794 }, 
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
-
-            try {
-                // Pequeña espera para asegurar que el navegador asimile el scroll y el modo pdf-exporting
-                await new Promise(r => setTimeout(r, 200));
-                await html2pdf().set(opt).from(document.getElementById('print-area')).save();
-            } catch (err) {
-                console.error("Error PDF:", err);
-            } finally {
-                document.body.classList.remove('pdf-exporting');
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-                lucide.createIcons();
-            }
-        }
-
-        function toggleCutLine() {
-            state.showCutLine = !state.showCutLine;
-            document.getElementById('check-cutline').checked = state.showCutLine;
-            renderLabels();
-        }
-
-        // --- CALCULADORA ---
-        function updateVencimientos() {
-            const dateStr = document.getElementById('calc-date-input').value;
-            const container = document.getElementById('vencimientos-results');
-            if (!container) return;
-            container.innerHTML = '';
-            
-            const list = [
-                { t: 'Griego Natural', d: 12, c: 'blue' },
-                { t: 'Griego con Fruta', d: 15, c: 'green' },
-                { t: 'Yogur Líquido', d: 21, c: 'purple' }
-            ];
-
-            list.forEach(item => {
-                const date = new Date(dateStr + "T00:00:00");
-                date.setDate(date.getDate() + item.d);
-                const meses = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
-                const label = `${date.getDate().toString().padStart(2,'0')} ${meses[date.getMonth()]} ${date.getFullYear().toString().slice(-2)}`;
-                container.innerHTML += `
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-t-${item.c}-500">
-                        <h3 class="font-black text-gray-800 uppercase text-xs mb-4">${item.t}</h3>
-                        <div class="text-2xl font-black text-${item.c}-700 mb-2">${label}</div>
-                        <div class="text-[10px] font-bold text-gray-400 bg-gray-50 p-2 rounded uppercase tracking-tighter">SELLO: VENCE ${label}</div>
-                    </div>`;
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerHTML = originalText; btn.disabled = false; wrapper.style.display = 'none'; window.scrollTo(0, currentScroll);
+            }).catch(err => {
+                btn.innerHTML = originalText; btn.disabled = false; wrapper.style.display = 'none'; window.scrollTo(0, currentScroll);
+                alert("Error al generar PDF.");
             });
-        }
-
-        // --- FINANZAS / BODEGA / VENTAS ---
-        function renderFinance() {
-            if(state.activeFinanceTab === 'bodega') renderBodega();
-            if(state.activeFinanceTab === 'lotes') renderLotes();
-            if(state.activeFinanceTab === 'nevera') renderNevera();
-            if(state.activeFinanceTab === 'historial') renderHistory();
-            lucide.createIcons();
-        }
-
-        function renderBodega() {
-            const grid = document.getElementById('inventory-summary-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
-            Object.entries(state.inventory).forEach(([k, item]) => {
-                const isDanger = item.stock <= 0;
-                const isWarning = item.stock <= item.minStock && !isDanger;
-                const c = isDanger ? 'red' : (isWarning ? 'yellow' : 'gray');
-                grid.innerHTML += `
-                    <div class="bg-${c === 'gray' ? 'white' : c + '-50'} p-4 rounded-xl shadow-sm border border-${c}-200 relative">
-                        <h3 class="font-bold text-gray-500 uppercase text-[10px] mb-1">${item.name}</h3>
-                        <p class="text-xl font-black text-${c === 'gray' ? 'blue-900' : c + '-700'}">${item.stock.toFixed(1)} <span class="text-[10px] font-bold opacity-60">${item.unit.split(' ')[0]}</span></p>
-                        <div class="mt-2 pt-2 border-t border-gray-100 text-[10px] font-bold text-green-600">$${item.avgCost.toFixed(0)} c/u</div>
-                    </div>`;
-            });
-
-            const sel = document.getElementById('select-buy-item');
-            if (sel) {
-                sel.innerHTML = '<option value="">Seleccionar Ítem...</option>';
-                Object.entries(state.inventory).forEach(([k, v]) => sel.innerHTML += `<option value="${k}">${v.name}</option>`);
-            }
-        }
-
-        function registerPurchase() {
-            const key = document.getElementById('select-buy-item').value;
-            const qty = parseFloat(document.getElementById('input-buy-qty').value);
-            const unitCost = parseFloat(document.getElementById('input-buy-unitcost').value);
-            if(!key || isNaN(qty) || isNaN(unitCost)) return;
-
-            const item = state.inventory[key];
-            const totalCost = qty * unitCost;
-            const newStock = item.stock + qty;
-            item.avgCost = ((item.stock * item.avgCost) + totalCost) / newStock;
-            item.stock = newStock;
-            
-            renderFinance();
-            document.getElementById('input-buy-qty').value = '';
-            document.getElementById('input-buy-unitcost').value = '';
-        }
-
-        function renderLotes() {
-            const container = document.getElementById('ingredients-inputs');
-            if (!container) return;
-            container.innerHTML = '';
-            const inputs = [
-                { id: 'leche', label: 'Cajas Leche (900ml)', step: '0.1' },
-                { id: 'azucar', label: 'Azúcar', hasUnits: true, unitId: 'azucarUnit' },
-                { id: 'polvo', label: 'Leche en Polvo', hasUnits: true, unitId: 'polvoUnit' },
-                { id: 'fresas', label: 'Fresas (Emp 300g)' },
-                { id: 'kumis', label: 'Kumis (Unid.)' },
-                { id: 'limon', label: 'Limón (Unid.)' },
-                { id: 'others', label: 'Otros Gastos ($)' }
-            ];
-
-            inputs.forEach(inp => {
-                if(inp.hasUnits) {
-                    container.innerHTML += `
-                        <div class="border-b-2 bg-gray-50 rounded-t-sm p-2">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">${inp.label}</label>
-                            <div class="flex items-center">
-                                <input type="number" id="bi-${inp.id}" oninput="updateBatchCosts()" class="w-full bg-transparent outline-none font-bold text-lg">
-                                <select id="bu-${inp.id}" onchange="updateBatchCosts()" class="bg-transparent text-sm font-bold text-gray-400">
-                                    <option value="g">Gramos</option><option value="kg">Kilos</option><option value="cucharada">Cuch.</option>
-                                </select>
-                            </div>
-                        </div>`;
-                } else {
-                    container.innerHTML += `
-                        <div class="p-2 border-b-2 bg-gray-50">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase block">${inp.label}</label>
-                            <input type="number" id="bi-${inp.id}" step="${inp.step || '1'}" oninput="updateBatchCosts()" class="w-full bg-transparent outline-none font-bold text-lg">
-                        </div>`;
-                }
-            });
-
-            const sel = document.getElementById('input-prod-size');
-            if (sel) {
-                sel.innerHTML = '';
-                Object.keys(stickerSizes).forEach(s => sel.innerHTML += `<option ${s==='10oz'?'selected':''}>${s}</option>`);
-            }
-            suggestBatchPrice();
-            updateBatchTable();
-            updateBatchCosts();
-        }
-
-        function updateBatchCosts() {
-            const getVal = (id) => parseFloat(document.getElementById(`bi-${id}`).value) || 0;
-            const toKg = (val, unit) => unit === 'kg' ? val : (unit === 'cucharada' ? (val * 15) / 1000 : val / 1000);
-
-            const costInsumos = (getVal('leche') * state.inventory.leche.avgCost) +
-                                (toKg(getVal('azucar'), document.getElementById('bu-azucar').value) * state.inventory.azucar.avgCost) +
-                                (toKg(getVal('polvo'), document.getElementById('bu-polvo').value) * state.inventory.polvo.avgCost) +
-                                (getVal('fresas') * state.inventory.fresas.avgCost) +
-                                (getVal('kumis') * state.inventory.kumis.avgCost) +
-                                (getVal('limon') * state.inventory.limon.avgCost) +
-                                getVal('others');
-            
-            document.getElementById('label-costo-base').innerText = `$${Math.floor(costInsumos).toLocaleString()}`;
-            
-            let costPkg = 0;
-            state.currentBatchProducts.forEach(p => costPkg += p.pkgCost);
-            document.getElementById('label-inversion-total').innerText = `$${Math.floor(costInsumos + costPkg).toLocaleString()}`;
-        }
-
-        function addCurrentProduct() {
-            const type = document.getElementById('input-prod-type').value;
-            const size = document.getElementById('input-prod-size').value;
-            const qty = parseInt(document.getElementById('input-prod-qty').value);
-            const price = parseFloat(document.getElementById('input-prod-price').value);
-            if(!qty || isNaN(qty) || isNaN(price)) return;
-
-            const unitCostEnv = state.inventory[`envase_${size}`].avgCost;
-            state.currentBatchProducts.push({ id: Date.now(), type, size, qty, price, pkgCost: unitCostEnv * qty });
-            document.getElementById('input-prod-qty').value = '';
-            updateBatchTable();
-            updateBatchCosts();
-        }
-
-        function updateBatchTable() {
-            const tb = document.getElementById('batch-table-body');
-            if (!tb) return;
-            tb.innerHTML = '';
-            state.currentBatchProducts.forEach(p => {
-                tb.innerHTML += `
-                    <tr>
-                        <td class="p-3"><b>${p.type}</b> <span class="text-[10px] bg-orange-100 px-2 rounded-full">${p.size}</span></td>
-                        <td class="p-3 font-bold">${p.qty}</td>
-                        <td class="p-3 text-blue-600">$${Math.floor(p.pkgCost).toLocaleString()}</td>
-                        <td class="p-3 text-green-700 font-bold">$${(p.qty * p.price).toLocaleString()}</td>
-                        <td class="p-3 text-right"><button onclick="removeFromBatch(${p.id})" class="text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
-                    </tr>`;
-            });
-            lucide.createIcons();
-        }
-
-        function removeFromBatch(id) {
-            state.currentBatchProducts = state.currentBatchProducts.filter(x => x.id !== id);
-            updateBatchTable();
-            updateBatchCosts();
-        }
-
-        function confirmProduction() {
-            if(state.currentBatchProducts.length === 0) return alert("Añade productos al lote.");
-            
-            const getVal = (id) => parseFloat(document.getElementById(`bi-${id}`).value) || 0;
-            const toKg = (val, unit) => unit === 'kg' ? val : (unit === 'cucharada' ? (val * 15) / 1000 : val / 1000);
-            
-            const baseCost = (getVal('leche') * state.inventory.leche.avgCost) +
-                             (toKg(getVal('azucar'), document.getElementById('bu-azucar').value) * state.inventory.azucar.avgCost) +
-                             (toKg(getVal('polvo'), document.getElementById('bu-polvo').value) * state.inventory.polvo.avgCost) +
-                             (getVal('fresas') * state.inventory.fresas.avgCost) +
-                             (getVal('kumis') * state.inventory.kumis.avgCost) +
-                             (getVal('limon') * state.inventory.limon.avgCost) +
-                             getVal('others');
-
-            const totalUnits = state.currentBatchProducts.reduce((s, p) => s + p.qty, 0);
-            const liquidCostPerUnit = baseCost / totalUnits;
-
-            state.currentBatchProducts.forEach(p => {
-                const key = `${p.type}_${p.size}`;
-                const realUnitCost = liquidCostPerUnit + (p.pkgCost / p.qty);
-                if(state.fridge[key]) {
-                    const newQty = state.fridge[key].qty + p.qty;
-                    state.fridge[key].unitCost = ((state.fridge[key].qty * state.fridge[key].unitCost) + (p.qty * realUnitCost)) / newQty;
-                    state.fridge[key].qty = newQty;
-                } else {
-                    state.fridge[key] = { type: p.type, size: p.size, qty: p.qty, unitCost: realUnitCost, defaultPrice: p.price };
-                }
-                state.inventory[`envase_${p.size}`].stock -= p.qty;
-            });
-
-            // Descontar Stock
-            state.inventory.leche.stock -= getVal('leche');
-            state.inventory.azucar.stock -= toKg(getVal('azucar'), document.getElementById('bu-azucar').value);
-            state.inventory.polvo.stock -= toKg(getVal('polvo'), document.getElementById('bu-polvo').value);
-            state.inventory.fresas.stock -= getVal('fresas');
-            state.inventory.kumis.stock -= getVal('kumis');
-            state.inventory.limon.stock -= getVal('limon');
-
-            const batchDate = document.getElementById('batch-date-input').value;
-            state.productionLogs.unshift({ 
-                id: Date.now(), 
-                lote: batchDate.split('-').reverse().join('').slice(0,4),
-                date: batchDate,
-                baseCost, 
-                products: [...state.currentBatchProducts] 
-            });
-            
-            state.currentBatchProducts = [];
-            switchSubTab('nevera');
-        }
-
-        function renderNevera() {
-            const grid = document.getElementById('fridge-items-grid');
-            const sel = document.getElementById('sale-product-key');
-            if (!grid || !sel) return;
-
-            grid.innerHTML = '';
-            sel.innerHTML = '<option value="">Seleccionar Producto...</option>';
-
-            if(Object.keys(state.fridge).length === 0) {
-                grid.innerHTML = '<div class="col-span-2 text-center py-10 opacity-40 font-bold">Nevera vacía.</div>';
-            }
-
-            Object.entries(state.fridge).forEach(([key, item]) => {
-                grid.innerHTML += `
-                    <div class="border border-blue-200 bg-white p-5 rounded-2xl shadow-sm flex flex-col justify-between hover:border-blue-400 transition-all cursor-pointer" onclick="selectFridgeItem('${key}')">
-                        <div class="flex justify-between items-start mb-3">
-                            <div><h3 class="font-black text-gray-800 text-sm">${item.type}</h3><span class="text-[10px] bg-orange-100 px-2 rounded-full font-black mt-1 inline-block uppercase">${item.size}</span></div>
-                            <span class="text-3xl font-black text-blue-600">${item.qty}</span>
-                        </div>
-                        <div class="mt-2 pt-3 border-t border-gray-100 flex justify-between text-[10px] uppercase font-bold text-gray-400">
-                             <span>Costo: <b>$${item.unitCost.toFixed(0)}</b></span><span>PVP: <b>$${item.defaultPrice}</b></span>
-                        </div>
-                    </div>`;
-                sel.innerHTML += `<option value="${key}">${item.type} ${item.size} (${item.qty} disp.)</option>`;
-            });
-        }
-
-        function selectFridgeItem(key) {
-            const sel = document.getElementById('sale-product-key');
-            if (sel) {
-                sel.value = key;
-                updateSalePricePlaceholder();
-            }
-        }
-
-        function updateSalePricePlaceholder() {
-            const key = document.getElementById('sale-product-key').value;
-            const priceField = document.getElementById('input-sale-price');
-            if(key && priceField) priceField.value = state.fridge[key].defaultPrice;
-        }
-
-        function registerSale() {
-            const key = document.getElementById('sale-product-key').value;
-            const qtyInput = document.getElementById('input-sale-qty').value;
-            const qty = parseInt(qtyInput);
-            const type = document.getElementById('select-sale-type').value;
-            const price = parseFloat(document.getElementById('input-sale-price').value);
-
-            if(!key || isNaN(qty)) return;
-            const item = state.fridge[key];
-            if(qty > item.qty) return alert("No hay suficiente stock.");
-
-            const costTotal = qty * item.unitCost;
-            const rev = type === 'venta' ? qty * price : 0;
-            
-            state.fridge[key].qty -= qty;
-            if(state.fridge[key].qty <= 0) delete state.fridge[key];
-
-            state.salesLogs.unshift({ 
-                id: Date.now(), 
-                date: state.packDate, 
-                type, 
-                itemName: `${item.type} ${item.size}`, 
-                qty, 
-                revenue: rev, 
-                cost: costTotal, 
-                profit: rev - costTotal 
-            });
-            
-            document.getElementById('input-sale-qty').value = '';
-            renderFinance();
-        }
-
-        function renderHistory() {
-            if(state.historyView === 'finanzas') {
-                const contentFinanzas = document.getElementById('hview-finanzas-content');
-                const contentLotes = document.getElementById('hview-lotes-content');
-                if (contentFinanzas) contentFinanzas.classList.remove('hidden');
-                if (contentLotes) contentLotes.classList.add('hidden');
-                
-                const revTotal = state.salesLogs.filter(s => s.type === 'venta').reduce((a,b) => a + b.revenue, 0);
-                const costTotal = state.salesLogs.reduce((a,b) => a + b.cost, 0);
-                const mermas = state.salesLogs.filter(s => s.type === 'merma').reduce((a,b) => a + b.cost, 0);
-                const exTotal = state.expenses.reduce((a,b) => a + b.amount, 0);
-                const net = revTotal - costTotal - exTotal;
-                const margin = revTotal > 0 ? ((net / revTotal) * 100).toFixed(1) : 0;
-
-                const dash = document.getElementById('kpi-dashboard');
-                if (dash) {
-                    dash.innerHTML = `
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Ventas</p><p class="text-xl font-black text-blue-600">$${revTotal.toLocaleString()}</p></div>
-                        <div class="bg-white p-4 rounded-2xl border shadow-sm flex flex-col justify-center"><p class="text-[9px] font-bold text-gray-400 uppercase">Costo Prod.</p><p class="text-xl font-black">$${costTotal.toLocaleString()}</p></div>
-                        <div class="bg-red-50 p-4 rounded-2xl border border-red-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-red-400 uppercase">Mermas</p><p class="text-xl font-black text-red-600">$${mermas.toLocaleString()}</p></div>
-                        <div class="bg-orange-50 p-4 rounded-2xl border border-orange-100 flex flex-col justify-center"><p class="text-[9px] font-bold text-orange-500 uppercase">Gastos Fijos</p><p class="text-xl font-black text-orange-600">$${exTotal.toLocaleString()}</p></div>
-                        <div class="bg-green-900 p-4 rounded-2xl border border-black col-span-2 md:col-span-1 flex flex-col justify-center"><p class="text-[9px] font-bold text-green-300 uppercase">Utilidad Neta</p><p class="text-xl font-black text-white">$${net.toLocaleString()}</p><p class="text-[9px] text-green-400 font-bold">${margin}% Margen</p></div>`;
-                }
-
-                // Star Product Logic
-                const metrics = {};
-                state.salesLogs.filter(s => s.type === 'venta').forEach(s => {
-                    if(!metrics[s.itemName]) metrics[s.itemName] = { q:0, p:0 };
-                    metrics[s.itemName].q += s.qty;
-                    metrics[s.itemName].p += s.profit;
-                });
-                let star = { n: 'N/A', v: 0 }, rich = { n: 'N/A', v: 0 };
-                Object.entries(metrics).forEach(([n, d]) => {
-                    if(d.q > star.v) star = { n, v: d.q };
-                    if(d.p > rich.v) rich = { n, v: d.p };
-                });
-
-                const metricsPanel = document.getElementById('star-product-metrics');
-                if (metricsPanel) {
-                    metricsPanel.innerHTML = `
-                        <div class="bg-blue-100 p-4 rounded-full text-blue-600 shadow-inner shrink-0"><i data-lucide="lightbulb" class="w-8 h-8"></i></div>
-                        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                            <div class="bg-white p-4 rounded-xl border border-gray-100">
-                                <p class="text-[10px] font-bold text-gray-400 uppercase">Producto Estrella (Ventas)</p>
-                                <p class="text-lg font-black text-gray-800">${star.n}</p>
-                                <p class="text-xs font-bold text-blue-600">${star.v} uds.</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-xl border border-gray-100">
-                                <p class="text-[10px] font-bold text-gray-400 uppercase">Más Rentable (Ganancia)</p>
-                                <p class="text-lg font-black text-gray-800">${rich.n}</p>
-                                <p class="text-xs font-bold text-green-600">$${Math.floor(rich.v).toLocaleString()} netos</p>
-                            </div>
-                        </div>`;
-                }
-
-                const exList = document.getElementById('list-fixed-expenses');
-                if (exList) {
-                    exList.innerHTML = state.expenses.length === 0 ? '<p class="text-center py-4 text-xs opacity-40">Sin gastos.</p>' : '';
-                    state.expenses.forEach(e => {
-                        exList.innerHTML += `
-                            <div class="flex justify-between items-center p-3 border rounded-xl bg-gray-50/30">
-                                <div><p class="text-xs font-bold">${e.description}</p><p class="text-[9px] text-gray-400">${e.date}</p></div>
-                                <div class="flex items-center gap-3"><span class="text-sm font-black text-orange-600">-$${e.amount.toLocaleString()}</span><button onclick="removeExpense(${e.id})" class="text-red-300 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4"></i></button></div>
-                            </div>`;
-                    });
-                }
-
-                const sList = document.getElementById('list-sales-merma');
-                if (sList) {
-                    sList.innerHTML = state.salesLogs.length === 0 ? '<p class="text-center py-4 text-xs opacity-40">Sin registros.</p>' : '';
-                    state.salesLogs.forEach(s => {
-                        sList.innerHTML += `
-                            <div class="border rounded-xl p-3 flex justify-between items-center ${s.type === 'merma' ? 'bg-red-50 border-red-100' : 'bg-white border-gray-100'}">
-                                <div><p class="font-black text-gray-800 text-xs">${s.qty}x ${s.itemName}</p><p class="text-[9px] text-gray-500 uppercase">${s.date} - ${s.type}</p></div>
-                                <div class="text-right">
-                                    ${s.type === 'venta' ? `<p class="text-sm font-black text-green-600">+$${Math.floor(s.revenue).toLocaleString()}</p><p class="text-[9px] font-bold text-gray-400">+$${Math.floor(s.profit).toLocaleString()} n.</p>` : `<p class="text-sm font-black text-red-600">-$${Math.floor(s.cost).toLocaleString()}</p>`}
-                                </div>
-                            </div>`;
-                    });
-                }
-
-            } else {
-                const contentFinanzas = document.getElementById('hview-finanzas-content');
-                const contentLotes = document.getElementById('hview-lotes-content');
-                if (contentFinanzas) contentFinanzas.classList.add('hidden');
-                if (contentLotes) contentLotes.classList.remove('hidden');
-                
-                const list = document.getElementById('list-batch-traceability');
-                if (list) {
-                    list.innerHTML = state.productionLogs.length === 0 ? '<div class="text-center py-10 opacity-40 font-bold">No hay lotes registrados.</div>' : '';
-                    state.productionLogs.forEach(log => {
-                        list.innerHTML += `
-                            <div class="bg-white border rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-6">
-                                <div class="flex-1 w-full text-center md:text-left">
-                                    <p class="font-black text-gray-800 text-lg">LOTE: ${log.lote} <span class="text-xs font-normal text-gray-400">(${log.date})</span></p>
-                                    <div class="text-xs text-gray-500 mt-2 bg-gray-50 p-3 rounded-xl flex flex-wrap gap-2 justify-center md:justify-start">
-                                        ${log.products.map(p => `<span class="bg-white border px-2 py-1 rounded shadow-sm font-bold">${p.qty}x ${p.size} ${p.type}</span>`).join('')}
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-4 w-full md:w-auto justify-center">
-                                    <div class="bg-white p-3 border rounded-xl text-center shadow-sm min-w-[100px]">
-                                        <p class="text-[9px] font-bold text-gray-400 uppercase mb-1">Costo Base</p><p class="font-black text-gray-700">$${Math.floor(log.baseCost).toLocaleString()}</p>
-                                    </div>
-                                    <button onclick="undoProduction(${log.id})" class="bg-red-50 text-red-500 p-4 rounded-xl border border-red-100 hover:bg-red-500 hover:text-white transition-all"><i data-lucide="trash-2"></i></button>
-                                </div>
-                            </div>`;
-                    });
-                }
-            }
-            lucide.createIcons();
-        }
-
-        function setHistoryView(view) {
-            state.historyView = view;
-            const btnFin = document.getElementById('hview-finanzas');
-            const btnLot = document.getElementById('hview-lotes');
-            if (btnFin) btnFin.className = view === 'finanzas' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
-            if (btnLot) btnLot.className = view === 'lotes' ? 'px-5 py-3 rounded-xl font-bold text-sm active-sub-tab' : 'px-5 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-500';
-            renderHistory();
-        }
-
-        function addFixedExpense() {
-            const d = document.getElementById('input-expense-desc').value;
-            const aInput = document.getElementById('input-expense-amt').value;
-            const a = parseFloat(aInput);
-            if(!d || isNaN(a)) return;
-            state.expenses.unshift({ id: Date.now(), description: d, amount: a, date: state.packDate });
-            document.getElementById('input-expense-desc').value = '';
-            document.getElementById('input-expense-amt').value = '';
-            renderFinance();
-        }
-
-        function removeExpense(id) { state.expenses = state.expenses.filter(x => x.id !== id); renderFinance(); }
-
-        function undoProduction(id) {
-            const batch = state.productionLogs.find(l => l.id === id);
-            if (!batch) return;
-            
-            if(!confirm("¿Seguro que quieres deshacer este lote? Se devolverán los insumos pero el stock en nevera debe estar disponible.")) return;
-            
-            state.productionLogs = state.productionLogs.filter(l => l.id !== id);
-            renderFinance();
-        }
-
-        function openResetModal() { 
-            const modal = document.getElementById('modal-confirm-reset');
-            if (modal) modal.classList.remove('hidden'); 
-            lucide.createIcons(); 
-        }
-        
-        function closeResetModal() { 
-            const modal = document.getElementById('modal-confirm-reset');
-            if (modal) modal.classList.add('hidden'); 
-        }
-
-        function resetEverything() {
-            Object.keys(state.inventory).forEach(k => { state.inventory[k].stock = 0; state.inventory[k].avgCost = 0; });
-            state.fridge = {};
-            state.salesLogs = [];
-            state.productionLogs = [];
-            state.expenses = [];
-            closeResetModal();
-            renderFinance();
-        }
-
-        function suggestBatchPrice() {
-            const size = document.getElementById('input-prod-size').value;
-            const priceField = document.getElementById('input-prod-price');
-            if (priceField) priceField.value = defaultSalePrices[size] || 0;
-        }
-
-        // --- INICIO ---
-        window.onload = () => {
-            const today = new Date().toISOString().split('T')[0];
-            const calcInput = document.getElementById('calc-date-input');
-            const batchInput = document.getElementById('batch-date-input');
-            if (calcInput) calcInput.value = today;
-            if (batchInput) batchInput.value = today;
-            state.packDate = today;
-
-            const grid = document.getElementById('sticker-grid');
-            if (grid) {
-                grid.innerHTML = '';
-                Object.keys(stickerSizes).forEach(s => {
-                    grid.innerHTML += `<button id="btn-size-${s}" onclick="setStickerSize('${s}')" class="p-3 text-[10px] font-bold border rounded-xl transition-all ${s==='10oz'?'bg-green-600 text-white shadow-md scale-105':'bg-white'}">${s}</button>`;
-                });
-            }
-
-            switchTab('registro');
-        };
-
-        function setStickerSize(s) {
-            state.stickerSize = s;
-            document.querySelectorAll('#sticker-grid button').forEach(b => {
-                b.classList.remove('bg-green-600', 'text-white', 'shadow-md', 'scale-105');
-                b.classList.add('bg-white');
-            });
-            const btn = document.getElementById(`btn-size-${s}`);
-            if (btn) {
-                btn.classList.add('bg-green-600', 'text-white', 'shadow-md', 'scale-105');
-                btn.classList.remove('bg-white');
-            }
-            renderLabels();
         }
     </script>
 </body>
