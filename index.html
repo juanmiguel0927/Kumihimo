@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller y Guía de Kumihimo | Juan Miguel Rios Redondo</title>
+    <title>Estudio de Kumihimo | Juan Miguel Rios Redondo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -14,14 +14,12 @@
             --bg-main: #f4f5f7;
             --bg-card: #ffffff;
             --text-main: #333333;
-            --tab-bg: #e5e7eb;
         }
 
         .dark-mode {
             --bg-main: #0f172a;
             --bg-card: #1e293b;
             --text-main: #f1f5f9;
-            --tab-bg: #334155;
         }
 
         body {
@@ -32,9 +30,7 @@
             overflow-x: hidden;
         }
         
-        h1, h2, h3, .jp-font {
-            font-family: 'Noto Serif JP', serif;
-        }
+        h1, h2, h3, .jp-font { font-family: 'Noto Serif JP', serif; }
 
         .hero-pattern {
             background-color: #1e1b4b;
@@ -44,231 +40,81 @@
         
         .slot-line { stroke: #1f2937; stroke-width: 3; stroke-linecap: round; }
         .slot-text { font-family: 'Open Sans', sans-serif; font-weight: bold; font-size: 14px; fill: #1f2937; text-anchor: middle; dominant-baseline: middle; }
-        .guide-dot { fill: #dc2626; }
         
         .real-img-container {
-            width: 100%;
-            height: 18rem;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border: 2px solid #e5e7eb;
-            background-color: #f3f4f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            font-style: italic;
-            text-align: center;
-            padding: 1rem;
+            width: 100%; height: 18rem; border-radius: 0.75rem; overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 2px solid #e5e7eb;
+            background-color: #f3f4f6; display: flex; align-items: center; justify-content: center;
         }
-        
-        .real-img-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .real-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .card-custom { background-color: var(--bg-card); border-color: rgba(229, 231, 235, 0.2); }
+        .theme-toggle { position: fixed; bottom: 20px; right: 20px; z-index: 100; cursor: pointer; }
+        .info-badge { background: rgba(79, 70, 229, 0.1); border: 1px solid rgba(79, 70, 229, 0.2); color: #4f46e5; }
+        .dark-mode .info-badge { color: #a5b4fc; }
+        .tab-btn.active { border-bottom: 4px solid #4f46e5; color: #4f46e5; font-weight: bold; }
+        .dark-mode .tab-btn.active { border-bottom: 4px solid #818cf8; color: #818cf8; }
 
-        .card-custom {
-            background-color: var(--bg-card);
-            border-color: rgba(229, 231, 235, 0.2);
-        }
-
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            cursor: pointer;
-        }
-        
-        .info-badge {
-            background: rgba(79, 70, 229, 0.1);
-            border: 1px solid rgba(79, 70, 229, 0.2);
-            color: #4f46e5;
-        }
-        
-        .dark-mode .info-badge {
-            color: #a5b4fc;
-        }
-
-        .tab-btn.active {
-            border-bottom: 4px solid #4f46e5;
-            color: #4f46e5;
-            font-weight: bold;
-        }
-        .dark-mode .tab-btn.active {
-            border-bottom: 4px solid #818cf8;
-            color: #818cf8;
-        }
-
-        /* Toast Notification */
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast {
-            min-width: 300px;
-            background-color: #333;
-            color: white;
-            padding: 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+        /* Toast */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { min-width: 300px; background-color: #333; color: white; padding: 16px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 12px; opacity: 0; transition: opacity 0.3s ease; }
         .toast.success { border-left: 6px solid #10b981; }
         .toast.error { border-left: 6px solid #ef4444; }
         .toast.show { opacity: 1; }
 
-        input, select {
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            border: 1px solid rgba(128,128,128,0.3);
-        }
+        input, select { background-color: var(--bg-main); color: var(--text-main); border: 1px solid rgba(128,128,128,0.3); }
+        .step-list li { margin-bottom: 0.5rem; }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Toast Notifications -->
     <div id="toast-container"></div>
+    <div onclick="toggleDarkMode()" class="theme-toggle bg-indigo-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition"><i id="theme-icon" class="fas fa-moon"></i></div>
 
-    <div onclick="toggleDarkMode()" class="theme-toggle bg-indigo-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition">
-        <i id="theme-icon" class="fas fa-moon"></i>
-    </div>
-
-    <!-- CONTENEDORES MAQUETADOS PARA LOS PDF -->
+    <!-- PDF 1: DISCO REDONDO -->
     <div id="pdf-wrapper-redondo" style="display: none; position: absolute; top: 0; left: 0; width: 210mm; background: white; z-index: -1;">
         <div id="pdf-container-redondo" style="width: 210mm; height: 297mm; padding: 2mm 20mm 0 20mm; box-sizing: border-box; font-family: Arial, sans-serif; background: white; margin: 0;">
-            <div style="text-align: center; margin-bottom: 15px;">
-                <h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0; text-transform: uppercase;">Plantilla de Fabricación</h1>
-                <h2 style="font-size: 16px; color: #dc2626; margin: 0 0 5px 0; font-weight: normal;">Disco Kumihimo (Mobidai) - 32 Ranuras</h2>
-                <p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p>
-            </div>
+            <div style="text-align: center; margin-bottom: 15px;"><h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0;">PLANTILLA DE FABRICACIÓN</h1><h2 style="font-size: 16px; color: #dc2626; margin: 0 0 5px 0; font-weight: normal;">Disco Kumihimo (Mobidai) - 32 Ranuras</h2><p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p></div>
             <div style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; border: 2px solid #e5e7eb; padding: 15px; border-radius: 10px; background-color: #f9fafb;">
-                <div style="flex: 1;">
-                    <h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🧵 Materiales:</h3>
-                    <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;">
-                        <li>Goma Eva (Foami) gruesa de 3-5mm.</li>
-                        <li>Tijeras, Cúter y pegamento.</li>
-                        <li>Hilo cola de ratón o algodón.</li>
-                    </ul>
-                </div>
-                <div style="flex: 1;">
-                    <h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🛠️ Instrucciones:</h3>
-                    <ol style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;">
-                        <li>Imprime a escala 100%.</li>
-                        <li>Pega el diseño sobre la Goma Eva.</li>
-                        <li>Recorta el borde, el centro y ranuras.</li>
-                    </ol>
-                </div>
+                <div style="flex: 1;"><h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🧵 Materiales:</h3><ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;"><li>Goma Eva (Foami) gruesa de 3-5mm.</li><li>Tijeras, Cúter y pegamento.</li><li>Hilo cola de ratón o algodón.</li></ul></div>
+                <div style="flex: 1;"><h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🛠️ Instrucciones:</h3><ol style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;"><li>Imprime a escala 100%.</li><li>Pega el diseño sobre la Goma Eva.</li><li>Recorta el borde, el centro y ranuras.</li></ol></div>
             </div>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <svg id="kumihimo-disk-print" width="175mm" height="175mm" viewBox="0 0 400 400" style="display: block; margin: 0 auto;"></svg>
-            </div>
-            <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #6b7280; font-style: italic;">
-                *Para cordones redondos. Propiedad de: Juan Miguel Rios Redondo.
-            </div>
+            <div style="display: flex; justify-content: center; align-items: center;"><svg id="kumihimo-disk-print" width="175mm" height="175mm" viewBox="0 0 400 400" style="display: block; margin: 0 auto;"></svg></div>
+            <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #6b7280; font-style: italic;">*Para cordones redondos. Propiedad de: Juan Miguel Rios Redondo.</div>
         </div>
     </div>
 
+    <!-- PDF 2: PLACA CUADRADA -->
     <div id="pdf-wrapper-cuadrado" style="display: none; position: absolute; top: 0; left: 0; width: 210mm; background: white; z-index: -1;">
         <div id="pdf-container-cuadrado" style="width: 210mm; height: 297mm; padding: 2mm 20mm 0 20mm; box-sizing: border-box; font-family: Arial, sans-serif; background: white; margin: 0;">
-            <div style="text-align: center; margin-bottom: 15px;">
-                <h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0; text-transform: uppercase;">Plantilla de Fabricación</h1>
-                <h2 style="font-size: 16px; color: #059669; margin: 0 0 5px 0; font-weight: normal;">Placa Cuadrada Kumihimo - 40 Ranuras</h2>
-                <p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p>
-            </div>
+            <div style="text-align: center; margin-bottom: 15px;"><h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0;">PLANTILLA DE FABRICACIÓN</h1><h2 style="font-size: 16px; color: #059669; margin: 0 0 5px 0; font-weight: normal;">Placa Cuadrada Kumihimo - 40 Ranuras</h2><p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p></div>
             <div style="display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; border: 2px solid #e5e7eb; padding: 15px; border-radius: 10px; background-color: #f9fafb;">
-                <div style="flex: 1;">
-                    <h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🧵 Uso de la Placa Cuadrada:</h3>
-                    <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;">
-                        <li>Diseñada específicamente para trenzas planas y anchas.</li>
-                        <li>Permite trabajar con 10, 16 o más hilos sin amontonarse.</li>
-                        <li>Ideal para crear patrones tipo chevron, flechas y letras.</li>
-                    </ul>
-                </div>
+                <div style="flex: 1;"><h3 style="color: #4f46e5; margin: 0 0 8px 0; font-size: 14px; font-weight: bold;">🧵 Uso de la Placa Cuadrada:</h3><ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #374151; line-height: 1.4;"><li>Diseñada específicamente para trenzas planas y anchas.</li><li>Permite trabajar con 10, 16 o más hilos sin amontonarse.</li><li>Ideal para crear patrones tipo chevron, flechas y letras.</li></ul></div>
             </div>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <svg id="kumihimo-square-print" width="175mm" height="175mm" viewBox="0 0 400 400" style="display: block; margin: 0 auto;"></svg>
-            </div>
-            <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #6b7280; font-style: italic;">
-                *Asegura bien los hilos en las esquinas. Propiedad de: Juan Miguel Rios Redondo.
-            </div>
+            <div style="display: flex; justify-content: center; align-items: center;"><svg id="kumihimo-square-print" width="175mm" height="175mm" viewBox="0 0 400 400" style="display: block; margin: 0 auto;"></svg></div>
+            <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #6b7280; font-style: italic;">*Asegura bien los hilos en las esquinas. Propiedad de: Juan Miguel Rios Redondo.</div>
         </div>
     </div>
 
     <!-- PDF 3: GUÍA DE TALLER E INSUMOS -->
     <div id="pdf-wrapper-taller" style="display: none; position: absolute; top: 0; left: 0; width: 210mm; background: white; z-index: -1;">
         <div id="pdf-container-taller" style="width: 210mm; height: 297mm; padding: 10mm 20mm; box-sizing: border-box; font-family: Arial, sans-serif; background: white; margin: 0;">
-            <div style="text-align: center; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">
-                <h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0; text-transform: uppercase;">Guía de Insumos y Herramientas</h1>
-                <h2 style="font-size: 16px; color: #ea580c; margin: 0 0 5px 0; font-weight: normal;">Kit Básico para montar tu Taller de Kumihimo</h2>
-                <p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p>
-            </div>
-            
-            <div style="margin-bottom: 20px;">
-                <h3 style="color: #4f46e5; font-size: 16px; font-weight: bold; border-left: 4px solid #4f46e5; padding-left: 10px; margin-bottom: 10px;">✂️ Herramientas Fundamentales</h3>
-                <ul style="font-size: 13px; color: #374151; line-height: 1.6; padding-left: 20px; margin: 0;">
-                    <li><strong>Discos y Placas:</strong> 2 Discos redondos de 32 ranuras y 1 Placa cuadrada de 40 ranuras (preferiblemente de Goma Eva densa).</li>
-                    <li><strong>Pesos (Omori):</strong> 1 peso de 50g y 1 peso de 100g. Puedes usar bolsas pequeñas con monedas o tuercas y un gancho tipo caimán.</li>
-                    <li><strong>Bobinas (Tama):</strong> De 8 a 16 bobinas de plástico o cartón para enrollar el excedente de hilo y evitar que se enrede durante el tejido.</li>
-                    <li><strong>Básicos de Mesa:</strong> Tijeras de precisión bien afiladas, cinta métrica flexible, encendedor (para sellar puntas sintéticas) y pegamento extra fuerte o de joyería.</li>
-                </ul>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <h3 style="color: #4f46e5; font-size: 16px; font-weight: bold; border-left: 4px solid #4f46e5; padding-left: 10px; margin-bottom: 10px;">🧵 Hilos Sugeridos (Inventario Inicial)</h3>
-                <ul style="font-size: 13px; color: #374151; line-height: 1.6; padding-left: 20px; margin: 0;">
-                    <li><strong>Cola de Ratón (1mm a 1.5mm):</strong> Mínimo 50 metros por color (Sugerencia: Negro, Blanco, Rojo, Azul Marino y 2 Neones). Es el hilo rey para aprender patrones redondos.</li>
-                    <li><strong>Paracord 550 o Microcord:</strong> 30 metros en 3 colores distintos. Excelente opción para tejidos de alta durabilidad como collares de mascotas (Kara Yatsu).</li>
-                    <li><strong>Hilo Encerado o Cuero:</strong> 50 metros. Perfecto para trenzas cuadradas rústicas y accesorios de hombre.</li>
-                    <li><strong>Algodón Perlé / Hilo de Bordar:</strong> 40 metros por color. Muy usado para pulseras de la amistad con patrón Chevron en placa plana.</li>
-                </ul>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <h3 style="color: #4f46e5; font-size: 16px; font-weight: bold; border-left: 4px solid #4f46e5; padding-left: 10px; margin-bottom: 10px;">✨ Fornituras y Abalorios (Stock Mínimo)</h3>
-                <ul style="font-size: 13px; color: #374151; line-height: 1.6; padding-left: 20px; margin: 0;">
-                    <li><strong>Terminales metálicos (Campanas):</strong> 50 unidades variadas de diferentes diámetros (4mm, 6mm, 8mm) para asegurar estéticamente los extremos de las trenzas redondas.</li>
-                    <li><strong>Cierres Pico de Loro (Mosquetones):</strong> 50 unidades (recomendados en acero inoxidable).</li>
-                    <li><strong>Argollas de unión:</strong> 100 unidades pequeñas (5mm o 6mm).</li>
-                    <li><strong>Mostacillas y Cuentas de cristal:</strong> 5 dedales (aproximadamente 500 unidades) de colores variados en tamaño 6/0 u 8/0 para integrar en los tejidos avanzados.</li>
-                </ul>
-            </div>
-            
-            <div style="text-align: center; margin-top: 40px; font-size: 11px; color: #6b7280; font-style: italic; border-top: 1px solid #e5e7eb; padding-top: 15px;">
-                *Las cantidades listadas son el presupuesto sugerido para comenzar a fabricar, calcular costos y generar ventas. <br>
-                Documento Oficial del Taller - Propiedad Intelectual de: Juan Miguel Rios Redondo.
-            </div>
+            <div style="text-align: center; margin-bottom: 15px; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;"><h1 style="font-size: 28px; font-weight: bold; color: #1e1b4b; margin: 0 0 5px 0;">GUÍA DE INSUMOS Y HERRAMIENTAS</h1><h2 style="font-size: 16px; color: #ea580c; margin: 0 0 5px 0; font-weight: normal;">Kit Básico para montar tu Taller de Kumihimo</h2><p style="font-size: 12px; color: #4f46e5; font-weight: bold; margin: 0;">Creado por: Juan Miguel Rios Redondo</p></div>
+            <div style="margin-bottom: 20px;"><h3 style="color: #4f46e5; font-size: 16px; font-weight: bold; border-left: 4px solid #4f46e5; padding-left: 10px; margin-bottom: 10px;">✂️ Herramientas Fundamentales</h3><ul style="font-size: 13px; color: #374151; line-height: 1.6; padding-left: 20px; margin: 0;"><li><strong>Discos y Placas:</strong> 2 Discos redondos de 32 ranuras y 1 Placa cuadrada de 40 ranuras (preferiblemente de Goma Eva densa).</li><li><strong>Pesos (Omori):</strong> 1 peso de 50g y 1 peso de 100g. Puedes usar bolsas pequeñas con monedas y un gancho caimán.</li><li><strong>Bobinas (Tama):</strong> De 8 a 16 bobinas de plástico para enrollar el excedente de hilo y evitar enredos.</li><li><strong>Básicos de Mesa:</strong> Tijeras de precisión, cinta métrica, encendedor y pegamento de joyería.</li></ul></div>
+            <div style="margin-bottom: 20px;"><h3 style="color: #4f46e5; font-size: 16px; font-weight: bold; border-left: 4px solid #4f46e5; padding-left: 10px; margin-bottom: 10px;">🧵 Hilos Sugeridos (Inventario Inicial)</h3><ul style="font-size: 13px; color: #374151; line-height: 1.6; padding-left: 20px; margin: 0;"><li><strong>Cola de Ratón (1mm a 1.5mm):</strong> Mínimo 50 metros por color (Sugerencia: Negro, Blanco, Rojo, Azul Marino, Neones).</li><li><strong>Paracord 550 o Microcord:</strong> 30 metros en 3 colores. Excelente para tejidos duraderos (Kara Yatsu).</li><li><strong>Hilo Encerado o Cuero:</strong> 50 metros. Perfecto para trenzas cuadradas rústicas.</li><li><strong>Algodón Perlé / Bordar:</strong> 40 metros por color. Muy usado para patrón Chevron en placa plana.</li></ul></div>
+            <div style="margin-bottom: 20px;"><h3 style="color: #4f46e5; font-size: 16px; font-weight: bold; border-left: 4px solid #4f46e5; padding-left: 10px; margin-bottom: 10px;">✨ Fornituras y Abalorios</h3><ul style="font-size: 13px; color: #374151; line-height: 1.6; padding-left: 20px; margin: 0;"><li><strong>Terminales (Campanas):</strong> 50 unidades variadas (4mm, 6mm, 8mm) para asegurar los extremos.</li><li><strong>Cierres Pico de Loro:</strong> 50 unidades (acero inoxidable).</li><li><strong>Argollas de unión:</strong> 100 unidades (5mm o 6mm).</li><li><strong>Mostacillas:</strong> 5 dedales (aprox 500 unds) de colores variados (tamaño 6/0 u 8/0).</li></ul></div>
+            <div style="text-align: center; margin-top: 40px; font-size: 11px; color: #6b7280; font-style: italic; border-top: 1px solid #e5e7eb; padding-top: 15px;">*Documento Oficial del Taller - Propiedad Intelectual de: Juan Miguel Rios Redondo.</div>
         </div>
     </div>
-
 
     <!-- Header Web -->
     <header class="hero-pattern text-white pt-12 pb-6 px-4 shadow-lg border-b-4 border-red-600 relative overflow-hidden">
         <div class="max-w-6xl mx-auto text-center relative z-10">
             <h1 class="text-4xl md:text-5xl font-bold mb-2">Estudio de Kumihimo <span class="text-red-400 jp-font">(組み紐)</span></h1>
-            <p class="text-lg text-indigo-200 mb-6">Guía de Tejidos y Gestión de Taller</p>
+            <p class="text-lg text-indigo-200 mb-6">Guía de Tejidos y Gestión de Taller por Juan Miguel Rios Redondo</p>
         </div>
-        
-        <!-- Tabs Navigation -->
         <div class="max-w-6xl mx-auto mt-4 flex justify-center gap-4">
-            <button onclick="switchTab('guide')" id="btn-tab-guide" class="tab-btn active px-6 py-3 rounded-t-lg bg-white/10 backdrop-blur-sm text-white/80 hover:text-white transition">
-                <i class="fas fa-book-open mr-2"></i> Guía & Patrones
-            </button>
-            <button onclick="switchTab('inventory')" id="btn-tab-inventory" class="tab-btn px-6 py-3 rounded-t-lg bg-white/10 backdrop-blur-sm text-white/80 hover:text-white transition">
-                <i class="fas fa-boxes mr-2"></i> Inventario & Precios
-            </button>
+            <button onclick="switchTab('guide')" id="btn-tab-guide" class="tab-btn active px-6 py-3 rounded-t-lg bg-white/10 backdrop-blur-sm text-white/80 hover:text-white transition"><i class="fas fa-book-open mr-2"></i> Guía & Patrones</button>
+            <button onclick="switchTab('inventory')" id="btn-tab-inventory" class="tab-btn px-6 py-3 rounded-t-lg bg-white/10 backdrop-blur-sm text-white/80 hover:text-white transition"><i class="fas fa-boxes mr-2"></i> Inventario & Producción</button>
         </div>
     </header>
 
@@ -277,315 +123,266 @@
     <!-- ========================================== -->
     <main id="tab-guide" class="max-w-6xl mx-auto px-4 py-12">
         
+        <!-- Descargas -->
         <section class="mb-16">
             <h2 class="text-3xl font-bold text-center mb-10"><i class="fas fa-print text-red-500 mr-3"></i>Descargas y Herramientas</h2>
             <div class="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
-                
                 <div class="card-custom p-8 rounded-2xl shadow-lg border text-center flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-2xl font-bold text-indigo-600 mb-2">Disco Redondo</h3>
-                        <p class="opacity-70 text-sm mb-6">El clásico de 32 ranuras. Perfecto para cordones cilíndricos y espirales.</p>
-                        <div class="bg-white p-4 rounded-full w-40 h-40 mx-auto mb-6 border shadow-inner flex items-center justify-center">
-                            <svg id="kumihimo-disk" width="100%" height="100%" viewBox="0 0 400 400"></svg>
-                        </div>
-                    </div>
-                    <button onclick="descargarPDF('redondo')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 w-full text-sm">
-                        <i class="fas fa-file-pdf mr-2"></i> Descargar Molde
-                    </button>
+                    <div><h3 class="text-2xl font-bold text-indigo-600 mb-2">Disco Redondo</h3><p class="opacity-70 text-sm mb-6">El clásico de 32 ranuras. Perfecto para cordones cilíndricos y espirales.</p><div class="bg-white p-4 rounded-full w-40 h-40 mx-auto mb-6 border shadow-inner flex items-center justify-center"><svg id="kumihimo-disk" width="100%" height="100%" viewBox="0 0 400 400"></svg></div></div>
+                    <button onclick="descargarPDF('redondo')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 w-full text-sm"><i class="fas fa-file-pdf mr-2"></i> Descargar Molde</button>
                 </div>
-
-                <div class="card-custom p-8 rounded-2xl shadow-lg border text-center flex flex-col justify-between relative overflow-hidden">
-                    <div>
-                        <h3 class="text-2xl font-bold text-emerald-600 mb-2">Placa Cuadrada</h3>
-                        <p class="opacity-70 text-sm mb-6">Molde de 40 ranuras. Diseñado para tejer brazaletes planos y tipo chevron.</p>
-                        <div class="bg-white p-4 rounded-2xl w-40 h-40 mx-auto mb-6 border shadow-inner flex items-center justify-center">
-                            <svg id="kumihimo-square" width="100%" height="100%" viewBox="0 0 400 400"></svg>
-                        </div>
-                    </div>
-                    <button onclick="descargarPDF('cuadrado')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 w-full text-sm">
-                        <i class="fas fa-file-pdf mr-2"></i> Descargar Placa
-                    </button>
+                <div class="card-custom p-8 rounded-2xl shadow-lg border text-center flex flex-col justify-between">
+                    <div><h3 class="text-2xl font-bold text-emerald-600 mb-2">Placa Cuadrada</h3><p class="opacity-70 text-sm mb-6">Molde de 40 ranuras. Diseñado para tejer brazaletes planos y tipo chevron.</p><div class="bg-white p-4 rounded-2xl w-40 h-40 mx-auto mb-6 border shadow-inner flex items-center justify-center"><svg id="kumihimo-square" width="100%" height="100%" viewBox="0 0 400 400"></svg></div></div>
+                    <button onclick="descargarPDF('cuadrado')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 w-full text-sm"><i class="fas fa-file-pdf mr-2"></i> Descargar Placa</button>
                 </div>
-
-                <div class="card-custom p-8 rounded-2xl shadow-lg border text-center flex flex-col justify-between relative overflow-hidden">
-                    <div>
-                        <h3 class="text-2xl font-bold text-orange-600 mb-2">Guía de Insumos</h3>
-                        <p class="opacity-70 text-sm mb-6">Las herramientas, hilos y fornituras sugeridas para iniciar tu propio taller profesional.</p>
-                        <div class="bg-white p-4 rounded-2xl w-40 h-40 mx-auto mb-6 border shadow-inner flex items-center justify-center">
-                            <i class="fas fa-boxes text-orange-500 text-6xl"></i>
-                        </div>
-                    </div>
-                    <button onclick="descargarPDF('taller')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 w-full text-sm">
-                        <i class="fas fa-file-pdf mr-2"></i> Descargar Guía
-                    </button>
+                <div class="card-custom p-8 rounded-2xl shadow-lg border text-center flex flex-col justify-between">
+                    <div><h3 class="text-2xl font-bold text-orange-600 mb-2">Guía de Insumos</h3><p class="opacity-70 text-sm mb-6">Herramientas, hilos y fornituras sugeridas para iniciar tu taller profesional.</p><div class="bg-white p-4 rounded-2xl w-40 h-40 mx-auto mb-6 border shadow-inner flex items-center justify-center"><i class="fas fa-boxes text-orange-500 text-6xl"></i></div></div>
+                    <button onclick="descargarPDF('taller')" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 w-full text-sm"><i class="fas fa-file-pdf mr-2"></i> Descargar Guía</button>
                 </div>
-
             </div>
         </section>
 
-        <!-- Calculadora Básica -->
+        <!-- Secretos de Taller -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8"><i class="fas fa-gem text-yellow-500 mr-3"></i>Secretos y Técnicas de Producción</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="card-custom p-6 rounded-xl border border-l-4 border-l-yellow-500 shadow-md">
+                    <h3 class="font-bold text-lg mb-2"><i class="fas fa-weight-hanging text-gray-500 mr-2"></i>Tensión Perfecta (Omori)</h3>
+                    <p class="text-sm opacity-80">Nunca tires del hilo con las manos. Usa siempre un peso colgado del nudo central. <strong>Regla:</strong> 45-50g para 8 hilos finos, y 80-100g para 16 hilos o Paracord. Esto garantiza simetría.</p>
+                </div>
+                <div class="card-custom p-6 rounded-xl border border-l-4 border-l-indigo-500 shadow-md">
+                    <h3 class="font-bold text-lg mb-2"><i class="fas fa-pause-circle text-gray-500 mr-2"></i>Pausas Inteligentes</h3>
+                    <p class="text-sm opacity-80">Nunca pauses tu trabajo cuando el disco esté "equilibrado". Haz la pausa justo a la mitad de un movimiento (ej. tras bajar un hilo). Así, al volver, tu cerebro sabrá qué hilo falta por mover.</p>
+                </div>
+                <div class="card-custom p-6 rounded-xl border border-l-4 border-l-emerald-500 shadow-md">
+                    <h3 class="font-bold text-lg mb-2"><i class="fas fa-ring text-gray-500 mr-2"></i>El "Hilo Alma"</h3>
+                    <p class="text-sm opacity-80">Para lograr una trenza redonda con mayor volumen sin gastar hilos extras, introduce un cordón grueso por el centro junto al peso. Tejerás el patrón *alrededor* de él, rellenando el interior hueco.</p>
+                </div>
+                <div class="card-custom p-6 rounded-xl border border-l-4 border-l-pink-500 shadow-md">
+                    <h3 class="font-bold text-lg mb-2"><i class="fas fa-dharmachakra text-gray-500 mr-2"></i>Bobinas (Tama)</h3>
+                    <p class="text-sm opacity-80">Para evitar enredos al trabajar con tiras de más de 60cm, enrolla el excedente de cada hilo en bobinas de plástico. Su peso colgante ayuda a mantener la tensión individual de cada hebra.</p>
+                </div>
+                <div class="card-custom p-6 rounded-xl border border-l-4 border-l-orange-500 shadow-md">
+                    <h3 class="font-bold text-lg mb-2"><i class="fas fa-compress-alt text-gray-500 mr-2"></i>Pre-estirado</h3>
+                    <p class="text-sm opacity-80">Hilos como la cola de ratón tienen elasticidad. Dale un tirón firme a cada tira antes de tejer para estirar las fibras. Así tu pulsera no se agrandará con el uso diario del cliente.</p>
+                </div>
+                <div class="card-custom p-6 rounded-xl border border-l-4 border-l-cyan-500 shadow-md">
+                    <h3 class="font-bold text-lg mb-2"><i class="fas fa-hand-paper text-gray-500 mr-2"></i>El Golpe de Placa</h3>
+                    <p class="text-sm opacity-80">Al tejer cintas planas (Chevron), los bordes pueden quedar irregulares. Tras cada secuencia, usa tus pulgares para empujar el nudo firmemente hacia la ranura superior. Compactará el tejido.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fórmula Universal -->
         <section class="mb-16 card-custom p-8 rounded-2xl shadow-inner border border-indigo-100 dark:border-indigo-800">
-            <h2 class="text-2xl font-bold text-indigo-600 mb-4"><i class="fas fa-calculator mr-3"></i>Calculadora de Hilos Rápida</h2>
-            <div class="flex flex-col md:flex-row gap-4 items-center bg-black/5 dark:bg-white/5 p-6 rounded-xl shadow-sm border border-black/10 dark:border-white/10">
-                <div class="w-full md:w-1/3">
-                    <label class="block text-sm font-bold opacity-70 mb-2">Longitud final (cm):</label>
-                    <input type="number" id="calc-length" value="20" class="w-full rounded-lg p-3 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-4"><i class="fas fa-calculator mr-3"></i>Fórmula de Corte de Hilo</h2>
+            <div class="bg-black/5 dark:bg-white/5 p-6 rounded-xl border border-black/10 dark:border-white/10">
+                <p class="text-sm opacity-80 leading-relaxed mb-4">
+                    Para la mayoría de los tejidos en Kumihimo, el hilo se "acorta" debido a la tensión y los cruces. La fórmula matemática para saber exactamente de qué tamaño cortar cada tira es:
+                </p>
+                <div class="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200 p-4 rounded-lg text-center font-bold text-lg mb-4 border border-indigo-300 dark:border-indigo-700">
+                    Longitud a Cortar = (Longitud Final Deseada + 15 cm) × Coeficiente del Tejido
                 </div>
-                <div class="w-full md:w-1/3 text-center">
-                    <button onclick="calcularHilosBasico()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow transition w-full">Calcular Medidas</button>
-                </div>
-                <div class="w-full md:w-1/3 bg-green-500/10 p-4 rounded-xl border border-green-500/20 text-center">
-                    <p class="text-sm text-green-600 font-semibold mb-1">Corta cada hilo de:</p>
-                    <p class="text-4xl font-black text-green-500 my-1" id="calc-result">60 cm</p>
-                    <p class="text-xs opacity-60 mt-2">Si doblas por la mitad, corta de <span id="calc-result-double" class="font-bold">120</span> cm.</p>
-                </div>
+                <p class="text-sm opacity-80 leading-relaxed">
+                    <strong>¿Por qué + 15 cm?</strong> Es el excedente técnico necesario para hacer el nudo inicial de anclaje, colgar el peso (Omori), y tener margen de maniobra al final para los nudos de cierre.<br>
+                    <strong>Coeficiente:</strong> En la Enciclopedia de abajo encontrarás el multiplicador exacto para cada patrón (ej. × 3 o × 3.5). <em>El cotizador de la pestaña Producción ya lo calcula automáticamente.</em>
+                </p>
             </div>
         </section>
 
+        <!-- Enciclopedia -->
         <section class="mb-12">
             <h2 class="text-4xl font-bold text-center mb-2"><i class="fas fa-book-open text-indigo-500 mr-3"></i>Enciclopedia de Patrones (10 Estilos)</h2>
-            <p class="text-center opacity-70 mb-10">Técnicas, moldes y paso a paso detallado para cada proyecto</p>
+            <p class="text-center opacity-70 mb-10">Técnicas, moldes y paso a paso detallado</p>
 
             <div class="grid lg:grid-cols-2 gap-8">
                 <!-- TEJIDO 1 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-indigo-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">1. Redonda (Kongo Gumi)</h3>
-                        <span class="bg-indigo-800 text-xs px-3 py-1 rounded-full font-semibold border border-indigo-400">8 Hilos</span>
-                    </div>
+                    <div class="bg-indigo-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">1. Redonda Clásica (Kongo Gumi)</h3><span class="bg-indigo-800 text-xs px-3 py-1 rounded-full font-semibold border border-indigo-400">8 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/1.jpg" alt="Kongo Gumi">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/1.jpg" alt="Kongo Gumi"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Cola de ratón, Satén</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>Posición: Coloca dos hilos en el Norte (32,1), Este (8,9), Sur (16,17) y Oeste (24,25).</li>
-                            <li>Toma el hilo de <strong>arriba a la derecha (1)</strong> y bájalo a la derecha (15).</li>
-                            <li>Toma el hilo de <strong>abajo a la izquierda (17)</strong> y súbelo a la izquierda (31).</li>
-                            <li>Gira el disco redondo 90° a la izquierda (sentido antihorario).</li>
-                            <li>Repite la secuencia manteniendo siempre una buena tensión.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Posición:</strong> Coloca dos hilos en el Norte (32,1), Este (8,9), Sur (16,17) y Oeste (24,25). Agrega el peso al nudo central.</li>
+                            <li>Toma el hilo de <strong>arriba a la derecha (1)</strong> y bájalo a la ranura libre a la derecha abajo (15).</li>
+                            <li>Toma el hilo de <strong>abajo a la izquierda (17)</strong> y súbelo a la ranura libre a la izquierda arriba (31).</li>
+                            <li>Gira el disco redondo 90° a la izquierda (sentido antihorario) para que el lado Este quede en la posición Norte. Repite la secuencia.</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 2 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-pink-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">2. Espiral de Color</h3>
-                        <span class="bg-pink-800 text-xs px-3 py-1 rounded-full font-semibold border border-pink-400">8 Hilos</span>
-                    </div>
+                    <div class="bg-pink-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">2. Espiral de Color</h3><span class="bg-pink-800 text-xs px-3 py-1 rounded-full font-semibold border border-pink-400">8 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/2.jpg" alt="Espiral">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/2.jpg" alt="Espiral"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Hilos neón, Paracord</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>Usa 4 hilos de un Color A y 4 hilos de un Color B.</li>
-                            <li>Acomoda el Color A en el Norte y Sur. Acomoda el Color B en Este y Oeste en tu disco redondo.</li>
-                            <li>Realiza exactamente los mismos movimientos que en el Kongo Gumi (Derecha baja a 15, Izquierda sube a 31).</li>
-                            <li>Gira el disco 90° a la izquierda. La espiral se forma automáticamente por el cruce de los colores.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li>Corta 4 hilos de un Color A y 4 hilos de un Color B contrastante.</li>
+                            <li><strong>Posición:</strong> Acomoda los 4 hilos del Color A en los polos Norte y Sur. Acomoda los 4 hilos del Color B en Este y Oeste.</li>
+                            <li>Aplica la técnica Kongo Gumi estándar: el hilo superior derecho baja, el inferior izquierdo sube.</li>
+                            <li>Gira el disco 90° a la izquierda. La formación en espiral es automática debido a la alternancia de los colores en los cuadrantes.</li>
                         </ol>
                     </div>
                 </div>
                 
                 <!-- TEJIDO 3 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-green-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">3. Trenza Cuadrada (Kaku Gumi)</h3>
-                        <span class="bg-green-800 text-xs px-3 py-1 rounded-full font-semibold border border-green-400">8 Hilos</span>
-                    </div>
+                    <div class="bg-green-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">3. Trenza Cuadrada (Kaku Gumi)</h3><span class="bg-green-800 text-xs px-3 py-1 rounded-full font-semibold border border-green-400">8 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/3.jpg" alt="Kaku Gumi">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/3.jpg" alt="Kaku Gumi"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Cuero, Hilo encerado</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>En este tejido <strong>no se gira el disco</strong> en ningún momento.</li>
-                            <li><strong>Vertical:</strong> Mueve el hilo 1 hacia abajo al 15. Mueve el 17 hacia arriba al 31.</li>
-                            <li><strong>Vertical Retorno:</strong> Mueve el hilo 32 hacia abajo al 14. Mueve el 16 hacia arriba al 2.</li>
-                            <li><strong>Horizontal:</strong> Mueve el hilo 9 hacia la izquierda al 23. Mueve el 25 hacia la derecha al 7.</li>
-                            <li><strong>Horizontal Retorno:</strong> Mueve el 8 hacia la izquierda al 26. Mueve el 24 hacia la derecha al 10. Repite.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Atención:</strong> En este tejido <strong>nunca</strong> se gira el disco. Mantenlo fijo siempre de frente.</li>
+                            <li><strong>Cruce Vertical:</strong> Mueve el hilo 1 hacia abajo al 15. Mueve el 17 hacia arriba al 31. Luego, mueve el 32 hacia abajo al 14, y el 16 hacia arriba al 2.</li>
+                            <li><strong>Cruce Horizontal:</strong> Mueve el hilo 9 hacia la izquierda al 23. Mueve el 25 hacia la derecha al 7. Luego, mueve el 8 hacia la izquierda al 26, y el 24 hacia la derecha al 10.</li>
+                            <li>Reajusta todos los hilos hacia el centro y repite desde el cruce vertical para crear las 4 caras planas.</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 4 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-teal-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">4. Plana Cinta (Hira Gumi)</h3>
-                        <span class="bg-teal-800 text-xs px-3 py-1 rounded-full font-semibold border border-teal-400">10 Hilos</span>
-                    </div>
+                    <div class="bg-teal-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">4. Plana Cinta (Hira Gumi)</h3><span class="bg-teal-800 text-xs px-3 py-1 rounded-full font-semibold border border-teal-400">10 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/4.jpg" alt="Hira Gumi">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/4.jpg" alt="Hira Gumi"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-square mr-1"></i>Placa Cuadrada</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Algodón Perlé, Bordar</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>Usa la Placa Cuadrada. Agrupa 5 hilos en las ranuras centrales de arriba y 5 en las centrales de abajo.</li>
-                            <li>Baja el hilo del extremo derecho (arriba) hacia el centro (abajo).</li>
-                            <li>Sube el hilo del extremo izquierdo (abajo) hacia el centro (arriba).</li>
-                            <li>Baja el hilo del extremo izquierdo (arriba) hacia el centro (abajo).</li>
-                            <li>Sube el hilo del extremo derecho (abajo) hacia el centro (arriba). Reajusta todos los hilos hacia el centro y repite.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Posición:</strong> En la Placa Cuadrada, agrupa 5 hilos en las ranuras centrales superiores y 5 en las centrales inferiores.</li>
+                            <li>Baja el hilo del <strong>extremo derecho (arriba)</strong> hacia la posición interior izquierda (abajo).</li>
+                            <li>Sube el hilo del <strong>extremo izquierdo (abajo)</strong> hacia la posición interior derecha (arriba).</li>
+                            <li>Baja el hilo del <strong>extremo izquierdo (arriba)</strong> hacia la posición interior derecha (abajo).</li>
+                            <li>Sube el hilo del <strong>extremo derecho (abajo)</strong> hacia la posición interior izquierda (arriba). Compacta los hilos al centro.</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 5 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-purple-700 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">5. Con Abalorios (Beaded)</h3>
-                        <span class="bg-purple-900 text-xs px-3 py-1 rounded-full font-semibold border border-purple-400">8 Hilos</span>
-                    </div>
+                    <div class="bg-purple-700 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">5. Con Abalorios (Beaded)</h3><span class="bg-purple-900 text-xs px-3 py-1 rounded-full font-semibold border border-purple-400">8 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/5.jpg" alt="Kumihimo Beaded">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/5.jpg" alt="Kumihimo Beaded"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Nylon S-Lon, Mostacillas</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>Ensarta las mostacillas previamente en todos los hilos. Asegura el excedente en bobinas pequeñas.</li>
-                            <li>Usa el disco redondo con la técnica Kongo Gumi (8 hilos).</li>
-                            <li>Antes de fijar el hilo de bajada en la ranura, desliza una cuenta hasta el centro exacto.</li>
-                            <li>Asegúrate de que la cuenta quede "atrapada" por debajo del hilo transversal. Repite en la subida, gira y continúa.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Preparación:</strong> Ensarta las mostacillas necesarias en cada hilo. Enrolla el hilo con las cuentas en bobinas.</li>
+                            <li>Inicia la técnica Kongo Gumi estándar con los 8 hilos.</li>
+                            <li>Antes de fijar el hilo en la ranura de destino, suelta <strong>una sola cuenta</strong> hacia el centro.</li>
+                            <li>Asegúrate de que la cuenta quede "atrapada" por debajo del hilo transversal. Repite en la subida, gira y continúa manteniendo la tensión alta.</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 6 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-orange-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">6. Kara Yatsu (Plana Ancha)</h3>
-                        <span class="bg-orange-800 text-xs px-3 py-1 rounded-full font-semibold border border-orange-300">16 Hilos</span>
-                    </div>
+                    <div class="bg-orange-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">6. Kara Yatsu (Plana Ancha)</h3><span class="bg-orange-800 text-xs px-3 py-1 rounded-full font-semibold border border-orange-300">16 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/6.jpg" alt="Kara Yatsu">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/6.jpg" alt="Kara Yatsu"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-square mr-1"></i>Placa Cuadrada</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Paracord, Algodón grueso</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>Coloca 8 hilos en las ranuras de arriba (4 a cada lado del centro) y 8 abajo en la Placa Cuadrada.</li>
-                            <li>Cruza el hilo extremo superior derecho hacia el interior (centro) del lado derecho de abajo.</li>
-                            <li>Cruza el hilo extremo superior izquierdo hacia el interior (centro) izquierdo de abajo.</li>
-                            <li>Toma los hilos centrales inferiores (uno por lado) y súbelos a los extremos exteriores superiores. Repite.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Posición:</strong> Acomoda 8 hilos centrados en el borde superior (4 a la izquierda del centro, 4 a la derecha) y 8 hilos idénticos en el borde inferior.</li>
+                            <li>Toma el hilo del <strong>extremo superior derecho</strong> y crúzalo en diagonal hacia la posición interior central del lado derecho (abajo).</li>
+                            <li>Toma el hilo del <strong>extremo superior izquierdo</strong> y crúzalo hacia la posición interior central del lado izquierdo (abajo).</li>
+                            <li>Toma los dos hilos <strong>centrales inferiores</strong> y crúzalos hacia afuera, colocándolos en los extremos exteriores vacíos de arriba.</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 7 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-sky-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">7. Kusari Gumi (Cadena)</h3>
-                        <span class="bg-sky-800 text-xs px-3 py-1 rounded-full font-semibold border border-sky-300">12 Hilos</span>
-                    </div>
+                    <div class="bg-sky-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">7. Kusari Gumi (Cadena)</h3><span class="bg-sky-800 text-xs px-3 py-1 rounded-full font-semibold border border-sky-300">12 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/7.jpg" alt="Kusari Gumi">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/7.jpg" alt="Kusari Gumi"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Cola de ratón bicolor</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>En el disco redondo, divide los 12 hilos en 3 grupos (Norte, Sureste, Suroeste) de 4 hilos cada uno.</li>
-                            <li>Mueve el hilo extremo derecho del grupo superior al lado derecho del grupo inferior derecho.</li>
-                            <li>Mueve el hilo extremo izquierdo del grupo superior al lado izquierdo del grupo inferior izquierdo.</li>
-                            <li>Gira el disco un tercio de vuelta y repite con el grupo que ahora quedó arriba.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Posición:</strong> Divide los 12 hilos en 3 grupos (ej: Norte, Sureste, Suroeste) de 4 hilos cada uno, formando un triángulo en el disco.</li>
+                            <li>Mueve el hilo del <strong>extremo derecho</strong> del grupo superior, hacia la posición interior izquierda del grupo inferior derecho.</li>
+                            <li>Mueve el hilo del <strong>extremo izquierdo</strong> del grupo superior, hacia la posición interior derecha del grupo inferior izquierdo.</li>
+                            <li>Gira el disco 120° (un tercio de vuelta) para que el siguiente grupo quede arriba y repite iterativamente para crear el eslabón.</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 8 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-rose-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">8. Edo Yatsu (Texturizada)</h3>
-                        <span class="bg-rose-800 text-xs px-3 py-1 rounded-full font-semibold border border-rose-300">8 Hilos</span>
-                    </div>
+                    <div class="bg-rose-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">8. Edo Yatsu (Texturizada)</h3><span class="bg-rose-800 text-xs px-3 py-1 rounded-full font-semibold border border-rose-300">8 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/8.jpg" alt="Edo Yatsu">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/8.jpg" alt="Edo Yatsu"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Seda sintética, Satén</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>En el disco redondo, coloca 2 hilos en cada punto cardinal (N, S, E, O).</li>
-                            <li>Mueve el hilo <strong>Superior-Derecha</strong> en diagonal hacia la posición <strong>Inferior-Izquierda</strong>.</li>
-                            <li>Mueve el hilo <strong>Superior-Izquierda</strong> en diagonal hacia <strong>Inferior-Derecha</strong>.</li>
-                            <li>Este cruce de lado a lado genera unas crestas o surcos muy marcados en el cordón. Gira y repite.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Posición:</strong> Coloca 2 hilos en cada punto cardinal clásico del disco (N, S, E, O). Al requerir cruces largos, consume más hilo.</li>
+                            <li>A diferencia del Kongo Gumi, mueve el hilo <strong>Superior-Derecha</strong> en diagonal cruzando el centro hacia la posición <strong>Inferior-Izquierda</strong>.</li>
+                            <li>Mueve el hilo <strong>Superior-Izquierda</strong> en diagonal cruzando el centro hacia <strong>Inferior-Derecha</strong>.</li>
+                            <li>Gira el disco 90°. Esta alteración en la longitud del cruce empuja los hilos hacia afuera, generando surcos profundos de gran textura.</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 9 (CHEVRON) -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-cyan-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">9. Plana Chevron (Flechas)</h3>
-                        <span class="bg-cyan-800 text-xs px-3 py-1 rounded-full font-semibold border border-cyan-300">10 Hilos</span>
-                    </div>
+                    <div class="bg-cyan-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">9. Plana Chevron (Flechas)</h3><span class="bg-cyan-800 text-xs px-3 py-1 rounded-full font-semibold border border-cyan-300">10 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/9491917120f190895664e5d4b2638226e5c7bf96/9.jpg" alt="Chevron">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/9491917120f190895664e5d4b2638226e5c7bf96/9.jpg" alt="Chevron"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-square mr-1"></i>Placa Cuadrada</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Algodón Perlé o Bordar</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>En la Placa Cuadrada, sitúa 5 hilos arriba centrados y 5 abajo centrados, con colores en formato "espejo" (Ej: A-B-C-B-A).</li>
-                            <li>Baja el hilo extremo exterior derecho (arriba) hacia el centro de las ranuras de abajo.</li>
-                            <li>Sube el hilo extremo exterior izquierdo (abajo) hacia el centro de las ranuras de arriba.</li>
-                            <li>Baja el extremo exterior izquierdo (arriba) al centro y sube el derecho (abajo) al centro. Alterna sucesivamente.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Posición Mágica:</strong> En la placa, sitúa 5 hilos arriba y 5 abajo centrados. Los colores deben reflejarse desde el centro (Ej: A-B-C-B-A).</li>
+                            <li>Baja el hilo del <strong>extremo exterior derecho (arriba)</strong> hacia el centro de las ranuras de abajo.</li>
+                            <li>Sube el hilo del <strong>extremo exterior izquierdo (abajo)</strong> hacia el centro de las ranuras de arriba.</li>
+                            <li>Baja el extremo exterior izquierdo (arriba) al centro, y sube el derecho (abajo) al centro. Desliza hacia el centro y compacta ("Golpe de placa").</li>
                         </ol>
                     </div>
                 </div>
 
                 <!-- TEJIDO 10 (FLORAL ABALORIOS) -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-fuchsia-600 px-6 py-4 text-white flex justify-between items-center">
-                        <h3 class="text-xl font-bold">10. Floral 16 Hilos Abalorios</h3>
-                        <span class="bg-fuchsia-800 text-xs px-3 py-1 rounded-full font-semibold border border-fuchsia-300">16 Hilos</span>
-                    </div>
+                    <div class="bg-fuchsia-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">10. Floral Abalorios (Kawari)</h3><span class="bg-fuchsia-800 text-xs px-3 py-1 rounded-full font-semibold border border-fuchsia-300">16 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
-                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg">
-                            <img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/9491917120f190895664e5d4b2638226e5c7bf96/10.jpg" alt="Floral Abalorios">
-                        </div>
-                        <div class="flex gap-2 mb-4">
+                        <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/9491917120f190895664e5d4b2638226e5c7bf96/10.jpg" alt="Floral Abalorios"></div>
+                        <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-cut mr-1"></i>Nylon S-Lon + Mostacillas</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso</h4>
-                        <ol class="list-decimal pl-4 space-y-2 text-sm opacity-90 flex-grow">
-                            <li>Usa el Disco Redondo. Distribuye 16 hilos en pares alrededor de todo el disco (8 pares de hilos equidistantes).</li>
-                            <li>Previamente debiste ensartar las mostacillas siguiendo tu esquema de color floral/hojas.</li>
-                            <li>Aplica la técnica de Kongo Gumi: el hilo superior-derecho baja, el inferior-izquierdo sube.</li>
-                            <li>Desliza siempre una mostacilla al centro antes de atraparla al cruzar. Gira a la siguiente estación (45°) y repite pacientemente.</li>
+                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
+                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
+                            <li><strong>Posición:</strong> Distribuye los 16 hilos en pares alrededor de todo el perímetro del disco redondo (formando 8 estaciones equidistantes).</li>
+                            <li>Ensarta meticulosamente las mostacillas calculando la paleta de color (base, flores y hojas).</li>
+                            <li>Teje usando la técnica de nudo redondo (el superior-derecho baja, el inferior-izquierdo sube).</li>
+                            <li>Inserta la cuenta correspondiente en el centro en cada movimiento. Gira la estación (45° en lugar de 90°) y repite pacientemente.</li>
                         </ol>
                     </div>
                 </div>
@@ -601,48 +398,51 @@
         
         <div class="grid lg:grid-cols-2 gap-8">
             <!-- PANEL BODEGA -->
-            <section class="card-custom rounded-2xl shadow-lg border overflow-hidden flex flex-col">
+            <section class="card-custom rounded-2xl shadow-lg border overflow-hidden flex flex-col h-full">
                 <div class="bg-indigo-900 px-6 py-4 text-white flex justify-between items-center">
                     <h2 class="text-xl font-bold"><i class="fas fa-boxes mr-2"></i> Bodega de Materiales</h2>
+                    <div class="flex gap-2">
+                        <button onclick="exportInventory()" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-xs transition" title="Respaldar Inventario"><i class="fas fa-download mr-1"></i> Exportar</button>
+                        <button onclick="document.getElementById('import-file').click()" class="bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-xs transition" title="Cargar Inventario"><i class="fas fa-upload mr-1"></i> Importar</button>
+                        <input type="file" id="import-file" style="display:none" accept=".json" onchange="importInventory(event)">
+                    </div>
                 </div>
-                <div class="p-6 flex-grow">
+                <div class="p-6 flex-grow flex flex-col">
                     <!-- Formulario Agregar Material -->
                     <form id="form-inventory" class="mb-6 bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-black/10 dark:border-white/10">
-                        <h3 class="font-bold text-sm mb-3">Agregar / Actualizar Material</h3>
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-sm">Nuevo Material</h3>
+                            <button type="button" onclick="clearInventory()" class="text-xs text-red-500 hover:text-red-700 font-bold"><i class="fas fa-broom mr-1"></i> Limpiar Todo</button>
+                        </div>
                         <div class="grid grid-cols-2 gap-3 mb-3">
-                            <input type="text" id="inv-name" placeholder="Nombre (ej. Cola de Ratón Azul)" class="col-span-2 p-2 rounded text-sm" required>
-                            
+                            <input type="text" id="inv-name" placeholder="Nombre (ej. Hilo Cola de Ratón Azul)" class="col-span-2 p-2 rounded text-sm" required>
                             <select id="inv-type" class="p-2 rounded text-sm bg-white dark:bg-gray-800">
                                 <option value="hilo">Hilo / Cordón</option>
                                 <option value="abalorio">Cuentas / Abalorios</option>
                                 <option value="broche">Broches / Cierres</option>
                             </select>
-                            
-                            <!-- SELECCIÓN DE UNIDAD -->
                             <select id="inv-unit" class="p-2 rounded text-sm bg-white dark:bg-gray-800">
                                 <option value="cm">Centímetros (cm)</option>
                                 <option value="metro">Metros (m)</option>
                                 <option value="und">Unidades (und)</option>
                                 <option value="dedal">Dedal</option>
                             </select>
-
                             <input type="number" step="0.01" id="inv-qty" placeholder="Cantidad Total" class="p-2 rounded text-sm" required min="0.01">
                             <input type="number" id="inv-cost" placeholder="Costo Total (COP)" class="p-2 rounded text-sm" required min="1">
                         </div>
-                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded text-sm transition">
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-sm transition shadow">
                             <i class="fas fa-plus mr-1"></i> Guardar en Bodega
                         </button>
                     </form>
 
                     <!-- Tabla de Inventario -->
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto flex-grow rounded-lg border border-black/10 dark:border-white/10">
                         <table class="w-full text-sm text-left">
-                            <thead class="text-xs uppercase bg-black/5 dark:bg-white/5 opacity-70">
+                            <thead class="text-xs uppercase bg-black/5 dark:bg-white/5 opacity-70 sticky top-0">
                                 <tr>
-                                    <th class="px-3 py-2 rounded-tl-lg">Material</th>
-                                    <th class="px-3 py-2">Stock</th>
-                                    <th class="px-3 py-2">Costo Base</th>
-                                    <th class="px-3 py-2 rounded-tr-lg">Acción</th>
+                                    <th class="px-3 py-2">Material</th>
+                                    <th class="px-3 py-2 text-center">Stock</th>
+                                    <th class="px-3 py-2 text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody id="inventory-list">
@@ -656,51 +456,55 @@
             <!-- PANEL COTIZADOR Y FABRICACIÓN -->
             <section class="card-custom rounded-2xl shadow-lg border overflow-hidden flex flex-col">
                 <div class="bg-emerald-700 px-6 py-4 text-white flex justify-between items-center">
-                    <h2 class="text-xl font-bold"><i class="fas fa-tags mr-2"></i> Cotizador y Fabricación</h2>
+                    <h2 class="text-xl font-bold"><i class="fas fa-tags mr-2"></i> Cotizador de Producción</h2>
                 </div>
                 <div class="p-6 flex-grow flex flex-col">
                     
-                    <div class="grid gap-4 mb-6 flex-grow">
-                        <!-- Selección de Modelo -->
+                    <div class="grid gap-4 mb-4 flex-grow">
                         <div>
-                            <label class="block text-sm font-bold opacity-70 mb-1">Modelo de Tejido:</label>
-                            <select id="prod-model" class="w-full p-2 rounded text-sm font-bold border-indigo-300" onchange="calcularPrecios()">
-                                <option value='{"id":1,"name":"Redonda (8 hilos)","threads":8,"multiplier":3,"beads":false}'>1. Redonda (8 hilos)</option>
-                                <option value='{"id":2,"name":"Plana Chevron (10 hilos)","threads":10,"multiplier":3,"beads":false}'>9. Plana Chevron (10 hilos)</option>
-                                <option value='{"id":3,"name":"Con Abalorios (8 hilos)","threads":8,"multiplier":3,"beads":true}'>5. Con Abalorios (8 hilos)</option>
-                                <option value='{"id":4,"name":"Kara Yatsu (16 hilos)","threads":16,"multiplier":3,"beads":false}'>6. Kara Yatsu (16 hilos)</option>
-                                <option value='{"id":5,"name":"Floral 16 Hilos Abalorios","threads":16,"multiplier":3,"beads":true}'>10. Floral 16 Hilos Abalorios</option>
+                            <label class="block text-sm font-bold opacity-70 mb-1">Modelo de Tejido a Fabricar:</label>
+                            <select id="prod-model" class="w-full p-2 rounded text-sm font-bold border-indigo-300 bg-white dark:bg-gray-800" onchange="calcularPrecios()">
+                                <option value='{"id":1,"name":"Redonda Clásica","threads":8,"multiplier":3,"beads":false}'>1. Redonda Clásica (8 hilos)</option>
+                                <option value='{"id":2,"name":"Espiral de Color","threads":8,"multiplier":3,"beads":false}'>2. Espiral de Color (8 hilos)</option>
+                                <option value='{"id":3,"name":"Trenza Cuadrada","threads":8,"multiplier":3,"beads":false}'>3. Trenza Cuadrada (8 hilos)</option>
+                                <option value='{"id":4,"name":"Plana Cinta","threads":10,"multiplier":3.5,"beads":false}'>4. Plana Cinta (10 hilos)</option>
+                                <option value='{"id":5,"name":"Con Abalorios","threads":8,"multiplier":3,"beads":true}'>5. Con Abalorios (8 hilos)</option>
+                                <option value='{"id":6,"name":"Kara Yatsu Plana","threads":16,"multiplier":3.5,"beads":false}'>6. Kara Yatsu Plana (16 hilos)</option>
+                                <option value='{"id":7,"name":"Kusari Gumi Cadena","threads":12,"multiplier":3.5,"beads":false}'>7. Kusari Gumi Cadena (12 hilos)</option>
+                                <option value='{"id":8,"name":"Edo Yatsu Textura","threads":8,"multiplier":3.5,"beads":false}'>8. Edo Yatsu Texturizada (8 hilos)</option>
+                                <option value='{"id":9,"name":"Plana Chevron","threads":10,"multiplier":3.5,"beads":false}'>9. Plana Chevron (10 hilos)</option>
+                                <option value='{"id":10,"name":"Floral 16 Abalorios","threads":16,"multiplier":3.5,"beads":true}'>10. Floral 16 Abalorios (16 hilos)</option>
                             </select>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-bold opacity-70 mb-1">Longitud Final (cm):</label>
-                                <input type="number" id="prod-length" value="20" min="5" class="w-full p-2 rounded text-sm text-center" onchange="calcularPrecios()">
+                                <input type="number" id="prod-length" value="20" min="5" class="w-full p-2 rounded text-sm text-center font-bold" onchange="calcularPrecios()">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold opacity-70 mb-1">Margen Ganancia (%):</label>
-                                <input type="number" id="prod-margin" value="150" min="0" class="w-full p-2 rounded text-sm text-center" onchange="calcularPrecios()">
+                                <input type="number" id="prod-margin" value="150" min="0" class="w-full p-2 rounded text-sm text-center font-bold" onchange="calcularPrecios()">
                             </div>
                         </div>
 
                         <!-- Selección Materiales -->
-                        <div class="bg-black/5 dark:bg-white/5 p-3 rounded-lg border border-black/10 dark:border-white/10 space-y-3">
+                        <div class="bg-black/5 dark:bg-white/5 p-4 rounded-lg border border-black/10 dark:border-white/10 space-y-3">
                             <div>
                                 <label class="block text-xs font-bold opacity-70 mb-1">Hilo Principal a utilizar:</label>
-                                <select id="prod-thread" class="w-full p-1.5 rounded text-xs" onchange="calcularPrecios()">
+                                <select id="prod-thread" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()">
                                     <option value="">-- Seleccionar de Bodega --</option>
                                 </select>
                             </div>
                             <div id="beads-selector-container" style="display:none;">
                                 <label class="block text-xs font-bold opacity-70 mb-1">Abalorios a utilizar:</label>
-                                <select id="prod-beads" class="w-full p-1.5 rounded text-xs" onchange="calcularPrecios()">
+                                <select id="prod-beads" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()">
                                     <option value="">-- Seleccionar de Bodega --</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold opacity-70 mb-1">Broche / Cierre:</label>
-                                <select id="prod-clasp" class="w-full p-1.5 rounded text-xs" onchange="calcularPrecios()">
+                                <select id="prod-clasp" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()">
                                     <option value="">-- Sin Broche --</option>
                                 </select>
                             </div>
@@ -708,31 +512,44 @@
                     </div>
 
                     <!-- Resultados Precios -->
-                    <div class="bg-indigo-900 text-white p-4 rounded-xl shadow-inner text-center mb-4 relative overflow-hidden">
-                        <p class="text-xs text-indigo-200 uppercase tracking-widest mb-1">Precio de Venta Sugerido</p>
-                        <h3 class="text-3xl font-black text-green-400 mb-2" id="price-cop">$ 0 COP</h3>
-                        <div class="flex justify-center gap-4 text-sm opacity-80">
-                            <span id="price-usd"><i class="fas fa-dollar-sign"></i> 0.00 USD</span>
-                            <span id="price-eur"><i class="fas fa-euro-sign"></i> 0.00 EUR</span>
+                    <div class="bg-slate-900 text-white p-4 rounded-xl shadow-inner text-center mb-4 relative overflow-hidden border border-slate-700">
+                        <div class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-500 rounded-full blur-3xl opacity-20"></div>
+                        <p class="text-xs text-slate-300 uppercase tracking-widest mb-1 relative z-10">Precio Venta Sugerido</p>
+                        <h3 class="text-4xl font-black text-emerald-400 mb-2 relative z-10" id="price-cop">$ 0 COP</h3>
+                        <div class="flex justify-center gap-4 text-sm opacity-80 relative z-10 mb-3">
+                            <span id="price-usd"><i class="fas fa-dollar-sign text-emerald-500"></i> 0.00</span>
+                            <span id="price-eur"><i class="fas fa-euro-sign text-emerald-500"></i> 0.00</span>
                         </div>
-                        <div class="mt-3 text-xs opacity-60 flex justify-between border-t border-white/20 pt-2">
-                            <span id="cost-details">Costo Real: $0</span>
+                        <div class="bg-emerald-900/50 rounded-lg p-2 flex justify-between items-center text-sm border border-emerald-500/30 relative z-10">
+                            <span class="text-emerald-200">Ganancia Neta:</span>
+                            <span class="font-bold text-emerald-300" id="net-profit">+$0 COP</span>
+                        </div>
+                        <div class="mt-3 text-xs opacity-60 flex justify-between border-t border-slate-700 pt-2 relative z-10">
+                            <span id="cost-details">Costo Fab: $0</span>
                             <span id="material-usage">Gasto: 0cm hilo</span>
                         </div>
                     </div>
 
-                    <button onclick="fabricarProducto()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg flex justify-center items-center">
-                        <i class="fas fa-hammer mr-2"></i> Fabricar y Descontar
+                    <button onclick="fabricarProducto()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl shadow-lg transition transform hover:-translate-y-1 text-lg flex justify-center items-center mb-6">
+                        <i class="fas fa-hammer mr-2"></i> Fabricar y Descontar Stock
                     </button>
+
+                    <!-- Historial de Producción -->
+                    <div>
+                        <h3 class="text-sm font-bold opacity-70 mb-2 border-b border-black/10 dark:border-white/10 pb-1"><i class="fas fa-history mr-1"></i> Últimas Fabricaciones</h3>
+                        <ul id="history-list" class="space-y-2 text-xs">
+                            <!-- Historial dinámico -->
+                        </ul>
+                    </div>
                 </div>
             </section>
         </div>
     </main>
 
-    <footer class="bg-gray-900 text-gray-400 py-10 text-center border-t border-indigo-800">
+    <footer class="bg-gray-900 text-gray-400 py-10 text-center border-t border-indigo-800 mt-10">
         <div class="max-w-4xl mx-auto px-4">
             <p class="text-lg text-white font-semibold mb-2">Taller Maestro de Kumihimo</p>
-            <p class="text-sm mb-4">Sistema de Gestión de Materiales y Patrones</p>
+            <p class="text-sm mb-4">Sistema Integral de Gestión y Catálogo de Patrones</p>
             <div class="h-px bg-indigo-500/20 w-1/4 mx-auto mb-4"></div>
             <p class="text-xs uppercase tracking-widest text-indigo-400 mb-1">Desarrollado y Creado por:</p>
             <p class="text-lg font-bold text-white tracking-wide">Juan Miguel Rios Redondo</p>
@@ -741,10 +558,9 @@
     </footer>
 
     <script>
-        // Año dinámico en el footer
+        // Año dinámico en el footer (2026 configurado por defecto actual)
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // --- TASAS DE CAMBIO (Aproximadas para Colombia) ---
         const USD_RATE = 4000;
         const EUR_RATE = 4300;
 
@@ -762,6 +578,7 @@
                 renderInventory();
                 populateDropdowns();
                 calcularPrecios();
+                renderHistory();
             }
         }
 
@@ -781,14 +598,10 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            
             const icon = type === 'success' ? '<i class="fas fa-check-circle text-emerald-500 text-xl"></i>' : '<i class="fas fa-exclamation-circle text-red-500 text-xl"></i>';
             toast.innerHTML = `${icon} <span class="text-sm font-semibold">${message}</span>`;
-            
             container.appendChild(toast);
-            
             setTimeout(() => toast.classList.add('show'), 10);
-            
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 300);
@@ -892,41 +705,26 @@
             }
         }
 
-        drawDisk("kumihimo-disk"); 
-        drawDisk("kumihimo-disk-print");
-        drawSquarePlate("kumihimo-square");
-        drawSquarePlate("kumihimo-square-print");
+        drawDisk("kumihimo-disk"); drawDisk("kumihimo-disk-print");
+        drawSquarePlate("kumihimo-square"); drawSquarePlate("kumihimo-square-print");
 
-        // --- DESCARGA PDF ---
+        // --- DESCARGA PDF MULTIPLE ---
         function descargarPDF(tipo) {
             let wrapperId, containerId, filename;
-            if(tipo === 'redondo') {
-                wrapperId = 'pdf-wrapper-redondo'; containerId = 'pdf-container-redondo'; filename = 'Plantilla_Redonda_JuanMiguel.pdf';
-                drawDisk("kumihimo-disk-print"); // Refrescar SVG
-            } else if (tipo === 'cuadrado') {
-                wrapperId = 'pdf-wrapper-cuadrado'; containerId = 'pdf-container-cuadrado'; filename = 'Plantilla_Cuadrada_JuanMiguel.pdf';
-                drawSquarePlate("kumihimo-square-print"); // Refrescar SVG
-            } else if (tipo === 'taller') {
-                wrapperId = 'pdf-wrapper-taller'; containerId = 'pdf-container-taller'; filename = 'Guia_Insumos_Taller_JuanMiguel.pdf';
-            }
+            if(tipo === 'redondo') { wrapperId = 'pdf-wrapper-redondo'; containerId = 'pdf-container-redondo'; filename = 'Plantilla_Redonda_JuanMiguel.pdf'; drawDisk("kumihimo-disk-print"); } 
+            else if (tipo === 'cuadrado') { wrapperId = 'pdf-wrapper-cuadrado'; containerId = 'pdf-container-cuadrado'; filename = 'Plantilla_Cuadrada_JuanMiguel.pdf'; drawSquarePlate("kumihimo-square-print"); } 
+            else if (tipo === 'taller') { wrapperId = 'pdf-wrapper-taller'; containerId = 'pdf-container-taller'; filename = 'Guia_Insumos_Taller_JuanMiguel.pdf'; }
             
             const wrapper = document.getElementById(wrapperId);
             const element = document.getElementById(containerId);
-            
             const currentScroll = window.scrollY;
+            
             wrapper.style.display = 'block';
             window.scrollTo(0, 0); 
-            
             showToast("Generando PDF...", "success");
 
-            const opt = {
-                margin: 0, filename: filename, image: { type: 'jpeg', quality: 1.0 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, width: 794 }, 
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+            const opt = { margin: 0, filename: filename, image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, width: 794 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
 
-            // Usamos setTimeout para asegurar que el navegador dibuje el display: block antes de capturar
-            // Esto soluciona el problema de no poder descargar varias veces sin recargar
             setTimeout(() => {
                 html2pdf().set(opt).from(element).save().then(() => {
                     wrapper.style.display = 'none'; 
@@ -940,17 +738,19 @@
             }, 150);
         }
 
-        // --- SISTEMA DE INVENTARIO INTELIGENTE ---
-        
-        let inventory = JSON.parse(localStorage.getItem('kumi_inventory_v3')) || [];
+        // --- SISTEMA DE INVENTARIO Y ERP ---
+        let inventory = JSON.parse(localStorage.getItem('kumi_inventory_v5')) || [];
+        let productionHistory = JSON.parse(localStorage.getItem('kumi_history_v5')) || [];
 
         const formatCOP = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 
         function saveInventory() {
-            localStorage.setItem('kumi_inventory_v3', JSON.stringify(inventory));
+            localStorage.setItem('kumi_inventory_v5', JSON.stringify(inventory));
+            localStorage.setItem('kumi_history_v5', JSON.stringify(productionHistory));
             renderInventory();
             populateDropdowns();
             calcularPrecios();
+            renderHistory();
         }
 
         function renderInventory() {
@@ -958,13 +758,13 @@
             tbody.innerHTML = '';
             
             if(inventory.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center py-6 opacity-50 italic">Tu bodega está vacía. Añade materiales para empezar a cotizar.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 opacity-50 italic">Tu bodega está vacía. Añade materiales.</td></tr>`;
                 return;
             }
 
             inventory.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = "border-b border-black/10 dark:border-white/10";
+                tr.className = "border-b border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition";
                 
                 let icon = '';
                 if(item.type === 'hilo') { icon = '<i class="fas fa-cut text-indigo-500 mr-2"></i>'; }
@@ -972,16 +772,39 @@
                 if(item.type === 'broche') { icon = '<i class="fas fa-link text-gray-500 mr-2"></i>'; }
 
                 tr.innerHTML = `
-                    <td class="px-3 py-2 font-semibold">${icon}${item.name}</td>
-                    <td class="px-3 py-2 ${item.stock <= 0 ? 'text-red-500 font-bold' : ''}">${Number(item.stock).toFixed(2).replace(/\.00$/, '')} ${item.unit}</td>
-                    <td class="px-3 py-2">${formatCOP.format(item.costPerUnit)} / ${item.unit}</td>
-                    <td class="px-3 py-2">
-                        <button onclick="deleteItem(${item.id})" class="text-red-500 hover:text-red-700 transition">
+                    <td class="px-3 py-2 font-semibold flex items-center h-full">${icon}${item.name}</td>
+                    <td class="px-3 py-2 text-center">
+                        <span class="${item.stock <= 0 ? 'text-red-500 font-bold' : ''}">${Number(item.stock).toFixed(2).replace(/\.00$/, '')} ${item.unit}</span>
+                    </td>
+                    <td class="px-3 py-2 flex justify-center gap-2">
+                        <button onclick="addStockPrompt(${item.id})" class="text-emerald-500 hover:text-emerald-700 transition px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 rounded" title="Reabastecer">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button onclick="deleteItem(${item.id})" class="text-red-500 hover:text-red-700 transition px-2 py-1 bg-red-100 dark:bg-red-900/30 rounded" title="Eliminar">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
+            });
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            if(productionHistory.length === 0) {
+                list.innerHTML = '<li class="text-center opacity-50 italic py-2">No hay fabricaciones recientes.</li>';
+                return;
+            }
+            // Mostrar últimos 5
+            productionHistory.slice(0, 5).forEach(hist => {
+                const li = document.createElement('li');
+                li.className = "bg-black/5 dark:bg-white/5 p-2 rounded flex justify-between items-center border border-black/10 dark:border-white/10";
+                li.innerHTML = `
+                    <div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> <span><strong>${hist.modelName}</strong> (${hist.length}cm)</span></div>
+                    <div class="text-right"><div class="font-bold text-emerald-600 dark:text-emerald-400">+${formatCOP.format(hist.profit)}</div><div class="opacity-50" style="font-size:10px">${hist.date}</div></div>
+                `;
+                list.appendChild(li);
             });
         }
 
@@ -993,36 +816,80 @@
             const qty = parseFloat(document.getElementById('inv-qty').value);
             const totalCost = parseFloat(document.getElementById('inv-cost').value);
             
-            const costPerUnit = totalCost / qty;
-            
-            inventory.push({
-                id: Date.now(),
-                name: name,
-                type: type,
-                unit: unit,
-                stock: qty,
-                costPerUnit: costPerUnit
-            });
-            
-            saveInventory();
-            this.reset();
-            showToast("Material agregado a bodega", "success");
+            inventory.push({ id: Date.now(), name: name, type: type, unit: unit, stock: qty, costPerUnit: (totalCost / qty) });
+            saveInventory(); this.reset(); showToast("Material agregado", "success");
         });
 
         function deleteItem(id) {
-            inventory = inventory.filter(item => item.id !== id);
+            if(confirm("¿Estás seguro de eliminar este material de la bodega?")) {
+                inventory = inventory.filter(item => item.id !== id);
+                saveInventory(); showToast("Material eliminado", "success");
+            }
+        }
+
+        function clearInventory() {
+            if(confirm("⚠️ ¿Peligro! ¿Estás absolutamente seguro de querer VACIAR toda la bodega y el historial?")) {
+                inventory = []; productionHistory = [];
+                saveInventory(); showToast("Taller reiniciado a cero", "success");
+            }
+        }
+
+        function addStockPrompt(id) {
+            const item = inventory.find(i => i.id === id);
+            const qtyStr = prompt(`¿Cuántos ${item.unit} nuevos compraste de "${item.name}"?`);
+            if(!qtyStr) return;
+            const costStr = prompt(`¿Cuánto te costó en total esos ${qtyStr} ${item.unit} adicionales? (COP)`);
+            if(!costStr) return;
+
+            const addQty = parseFloat(qtyStr);
+            const addCost = parseFloat(costStr);
+            if(isNaN(addQty) || isNaN(addCost) || addQty <= 0) { showToast("Datos inválidos", "error"); return; }
+
+            // Promediar costo
+            const currentTotalValue = item.stock * item.costPerUnit;
+            const newTotalValue = currentTotalValue + addCost;
+            item.stock += addQty;
+            item.costPerUnit = newTotalValue / item.stock; // Nuevo precio promedio
+            
             saveInventory();
-            showToast("Material eliminado", "success");
+            showToast("Stock actualizado correctamente", "success");
+        }
+
+        function exportInventory() {
+            const dataStr = JSON.stringify({inventory, productionHistory});
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = 'Respaldo_Taller_Kumihimo.json';
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            showToast("Bodega exportada", "success");
+        }
+
+        function importInventory(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if(data.inventory) inventory = data.inventory;
+                    if(data.productionHistory) productionHistory = data.productionHistory;
+                    saveInventory();
+                    showToast("Bodega restaurada con éxito", "success");
+                } catch(error) {
+                    showToast("Archivo corrupto o inválido", "error");
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = ""; // Reset
         }
 
         function populateDropdowns() {
             const selThread = document.getElementById('prod-thread');
             const selBeads = document.getElementById('prod-beads');
             const selClasp = document.getElementById('prod-clasp');
-            
-            const curT = selThread.value;
-            const curB = selBeads.value;
-            const curC = selClasp.value;
+            const curT = selThread.value; const curB = selBeads.value; const curC = selClasp.value;
 
             selThread.innerHTML = '<option value="">-- Seleccionar Hilo --</option>';
             selBeads.innerHTML = '<option value="">-- Seleccionar Abalorio --</option>';
@@ -1036,9 +903,7 @@
                 if(item.type === 'broche') selClasp.innerHTML += opt;
             });
 
-            if(curT) selThread.value = curT;
-            if(curB) selBeads.value = curB;
-            if(curC) selClasp.value = curC;
+            if(curT) selThread.value = curT; if(curB) selBeads.value = curB; if(curC) selClasp.value = curC;
         }
 
         let currentProductionReq = null;
@@ -1047,9 +912,8 @@
             const modelJson = document.getElementById('prod-model').value;
             if(!modelJson) return;
             const model = JSON.parse(modelJson);
-            
             const length = parseFloat(document.getElementById('prod-length').value) || 20;
-            const margin = parseFloat(document.getElementById('prod-margin').value) || 100;
+            const margin = parseFloat(document.getElementById('prod-margin').value) || 150;
             
             document.getElementById('beads-selector-container').style.display = model.beads ? 'block' : 'none';
 
@@ -1061,61 +925,39 @@
             const matBead = inventory.find(i => i.id == bId);
             const matClasp = inventory.find(i => i.id == cId);
 
-            // Total de cm base necesarios
-            const threadLengthPerStrand = length * model.multiplier; 
+            // Fórmula mejorada del Maestro: (L + 15cm) * multi * hilos
+            const threadLengthPerStrand = (length + 15) * model.multiplier; 
             const totalThreadNeededCm = threadLengthPerStrand * model.threads; 
+            const totalBeadsNeededUnd = model.beads ? Math.ceil(length * 1.5 * (model.threads/2)) : 0; 
             
-            // Cuentas base necesarias
-            const totalBeadsNeededUnd = model.beads ? (length * 2) : 0; 
-            
-            let totalCost = 0;
-            let deductionT = 0; 
-            let deductionB = 0; 
+            let totalCost = 0; let deductionT = 0; let deductionB = 0; 
 
-            // CALCULAR COSTO Y DEDUCCIÓN HILO
             if(matThread) {
-                if(matThread.unit === 'metro') {
-                    deductionT = totalThreadNeededCm / 100;
-                    totalCost += deductionT * matThread.costPerUnit;
-                } else { 
-                    deductionT = totalThreadNeededCm;
-                    totalCost += deductionT * matThread.costPerUnit;
-                }
+                deductionT = matThread.unit === 'metro' ? (totalThreadNeededCm / 100) : totalThreadNeededCm;
+                totalCost += deductionT * matThread.costPerUnit;
             }
-
-            // CALCULAR COSTO Y DEDUCCIÓN CUENTAS (Aprox 1 Dedal = 100 und)
             if(model.beads && matBead) {
-                if(matBead.unit === 'dedal') {
-                    deductionB = totalBeadsNeededUnd / 100;
-                    totalCost += deductionB * matBead.costPerUnit;
-                } else { 
-                    deductionB = totalBeadsNeededUnd;
-                    totalCost += deductionB * matBead.costPerUnit;
-                }
+                deductionB = matBead.unit === 'dedal' ? (totalBeadsNeededUnd / 100) : totalBeadsNeededUnd;
+                totalCost += deductionB * matBead.costPerUnit;
             }
+            if(matClasp) totalCost += 1 * matClasp.costPerUnit;
 
-            if(matClasp) {
-                totalCost += 1 * matClasp.costPerUnit;
-            }
-
-            // Precio Venta
             const suggestedPriceCOP = totalCost * (1 + (margin / 100));
-            const priceUSD = suggestedPriceCOP / USD_RATE;
-            const priceEUR = suggestedPriceCOP / EUR_RATE;
-
-            // Actualizar UI
-            document.getElementById('price-cop').textContent = formatCOP.format(suggestedPriceCOP);
-            document.getElementById('price-usd').innerHTML = `<i class="fas fa-dollar-sign"></i> ${priceUSD.toFixed(2)} USD`;
-            document.getElementById('price-eur').innerHTML = `<i class="fas fa-euro-sign"></i> ${priceEUR.toFixed(2)} EUR`;
+            const netProfit = suggestedPriceCOP - totalCost;
             
-            document.getElementById('cost-details').textContent = `Costo Real: ${formatCOP.format(totalCost)}`;
-            document.getElementById('material-usage').textContent = `Gasto: ${totalThreadNeededCm}cm hilo${model.beads ? ', '+totalBeadsNeededUnd+' cuentas' : ''}`;
+            document.getElementById('price-cop').textContent = formatCOP.format(suggestedPriceCOP);
+            document.getElementById('price-usd').innerHTML = `<i class="fas fa-dollar-sign text-emerald-500"></i> ${(suggestedPriceCOP/USD_RATE).toFixed(2)}`;
+            document.getElementById('price-eur').innerHTML = `<i class="fas fa-euro-sign text-emerald-500"></i> ${(suggestedPriceCOP/EUR_RATE).toFixed(2)}`;
+            
+            document.getElementById('net-profit').textContent = `+${formatCOP.format(netProfit)} COP`;
+            document.getElementById('cost-details').textContent = `Costo Fab: ${formatCOP.format(totalCost)}`;
+            document.getElementById('material-usage').textContent = `Consumo: ${Math.ceil(totalThreadNeededCm)}cm hilo${model.beads ? ', ~'+totalBeadsNeededUnd+' cuentas' : ''}`;
 
             currentProductionReq = {
-                tId: tId, tQtyDeduct: deductionT, tCmDisplay: totalThreadNeededCm,
-                bId: model.beads ? bId : null, bQtyDeduct: deductionB, bUndDisplay: totalBeadsNeededUnd,
-                cId: cId, cQtyDeduct: cId ? 1 : 0,
-                cost: totalCost
+                modelName: model.name, length: length, profit: netProfit,
+                tId: tId, tQtyDeduct: deductionT,
+                bId: model.beads ? bId : null, bQtyDeduct: deductionB,
+                cId: cId, cQtyDeduct: cId ? 1 : 0
             };
         }
 
@@ -1123,55 +965,41 @@
             if(!currentProductionReq) return;
             const req = currentProductionReq;
             
-            if(!req.tId) { showToast("Debes seleccionar un hilo de la bodega", "error"); return; }
-            if(req.bId === "" && document.getElementById('prod-model').value.includes('"beads":true')) {
-                showToast("Este modelo requiere seleccionar abalorios", "error"); return;
-            }
+            if(!req.tId) { showToast("Selecciona hilo de bodega", "error"); return; }
+            if(req.bId === "" && document.getElementById('prod-model').value.includes('"beads":true')) { showToast("Selecciona abalorios", "error"); return; }
 
-            // Validar stock
             const tItem = inventory.find(i => i.id == req.tId);
-            if(!tItem || tItem.stock < req.tQtyDeduct) {
-                showToast(`Stock insuficiente de hilo (Te faltan material)`, "error"); return;
-            }
+            if(!tItem || tItem.stock < req.tQtyDeduct) { showToast(`Stock insuficiente de hilo`, "error"); return; }
 
-            let bItem = null;
-            if(req.bId) {
-                bItem = inventory.find(i => i.id == req.bId);
-                if(!bItem || bItem.stock < req.bQtyDeduct) {
-                    showToast(`Stock insuficiente de cuentas`, "error"); return;
-                }
-            }
+            let bItem = null; let cItem = null;
+            if(req.bId) { bItem = inventory.find(i => i.id == req.bId); if(!bItem || bItem.stock < req.bQtyDeduct) { showToast(`Stock insuficiente de cuentas`, "error"); return; } }
+            if(req.cId) { cItem = inventory.find(i => i.id == req.cId); if(!cItem || cItem.stock < req.cQtyDeduct) { showToast(`Stock insuficiente de broches`, "error"); return; } }
 
-            let cItem = null;
-            if(req.cId) {
-                cItem = inventory.find(i => i.id == req.cId);
-                if(!cItem || cItem.stock < req.cQtyDeduct) {
-                    showToast(`Stock insuficiente de broches`, "error"); return;
-                }
-            }
-
-            // Descontar
+            // Deducciones
             tItem.stock -= req.tQtyDeduct;
             if(bItem) bItem.stock -= req.bQtyDeduct;
             if(cItem) cItem.stock -= req.cQtyDeduct;
 
+            // Historial
+            const dateStr = new Date().toLocaleDateString('es-CO', {day: '2-digit', month: 'short', hour:'2-digit', minute:'2-digit'});
+            productionHistory.unshift({
+                modelName: req.modelName, length: req.length, profit: req.profit, date: dateStr
+            });
+
             saveInventory();
-            showToast("¡Tejido fabricado! Materiales descontados.", "success");
+            showToast("¡Tejido fabricado y guardado en historial!", "success");
         }
 
         function calcularHilosBasico() {
             const length = document.getElementById('calc-length').value;
-            const singleThread = Math.ceil(length * 3);
+            const singleThread = Math.ceil((parseFloat(length)+15) * 3); // Usamos promedio de 3
             document.getElementById('calc-result').textContent = singleThread + " cm";
             document.getElementById('calc-result-double').textContent = singleThread * 2;
         }
 
         // INIT
-        renderInventory();
-        populateDropdowns();
+        renderInventory(); populateDropdowns(); renderHistory();
 
     </script>
 </body>
-</html>
-
-
+    </html>
