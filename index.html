@@ -62,7 +62,9 @@
         .toast.show { opacity: 1; }
 
         input, select { background-color: var(--bg-main); color: var(--text-main); border: 1px solid rgba(128,128,128,0.3); }
-        .step-list li { margin-bottom: 0.5rem; }
+        .step-list li { margin-bottom: 0.75rem; line-height: 1.5; }
+        .step-title { color: #4f46e5; font-weight: 700; display: block; margin-bottom: 0.25rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;}
+        .dark-mode .step-title { color: #818cf8; }
     </style>
 </head>
 <body class="antialiased">
@@ -173,29 +175,58 @@
             </div>
         </section>
 
-        <!-- Fórmula Universal -->
+        <!-- NUEVA: Calculadora Inteligente -->
         <section class="mb-16 card-custom p-8 rounded-2xl shadow-inner border border-indigo-100 dark:border-indigo-800">
-            <h2 class="text-2xl font-bold text-indigo-600 mb-4"><i class="fas fa-calculator mr-3"></i>Fórmula de Corte de Hilo</h2>
-            <div class="bg-black/5 dark:bg-white/5 p-6 rounded-xl border border-black/10 dark:border-white/10">
-                <p class="text-sm opacity-80 leading-relaxed mb-4">
-                    Para la mayoría de los tejidos en Kumihimo, el hilo se "acorta" debido a la tensión y los cruces. La fórmula matemática para saber exactamente de qué tamaño cortar cada tira es:
-                </p>
-                <div class="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-200 p-4 rounded-lg text-center font-bold text-lg mb-4 border border-indigo-300 dark:border-indigo-700">
-                    Longitud a Cortar = (Longitud Final Deseada + 15 cm) × Coeficiente del Tejido
+            <h2 class="text-2xl font-bold text-indigo-600 mb-4"><i class="fas fa-calculator mr-3"></i>Calculadora Inteligente de Medidas</h2>
+            <div class="grid md:grid-cols-2 gap-8 bg-black/5 dark:bg-white/5 p-6 rounded-xl shadow-sm border border-black/10 dark:border-white/10">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold opacity-70 mb-1">1. ¿Qué vas a tejer?</label>
+                        <select id="calc-tipo" class="w-full rounded-lg p-2 text-sm font-bold" onchange="cambiarTipoAccesorio()">
+                            <option value="pulsera">Pulsera (Muñeca)</option>
+                            <option value="tobillera">Tobillera (Tobillo)</option>
+                            <option value="collar">Collar (Cuello)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold opacity-70 mb-1">2. Medida Anatómica (cm):</label>
+                        <input type="number" id="calc-medida" value="16" class="w-full rounded-lg p-2 text-sm font-bold">
+                        <p class="text-xs opacity-60 mt-1">Mide el contorno exacto. El sistema añadirá automáticamente 2cm para holgura y el broche.</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold opacity-70 mb-1">3. Patrón a utilizar:</label>
+                        <select id="calc-patron" class="w-full rounded-lg p-2 text-sm font-bold">
+                            <option value="3">Patrones Clásicos Redondos (Multiplicador x3)</option>
+                            <option value="3.5">Patrones Complejos / Planos (Multiplicador x3.5)</option>
+                        </select>
+                    </div>
+                    <button onclick="calcularHilosAvanzado()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow transition w-full">
+                        <i class="fas fa-magic mr-2"></i> Calcular Hilos
+                    </button>
                 </div>
-                <p class="text-sm opacity-80 leading-relaxed">
-                    <strong>¿Por qué + 15 cm?</strong> Es el excedente técnico necesario para hacer el nudo inicial de anclaje, colgar el peso (Omori), y tener margen de maniobra al final para los nudos de cierre.<br>
-                    <strong>Coeficiente:</strong> En la Enciclopedia de abajo encontrarás el multiplicador exacto para cada patrón (ej. × 3 o × 3.5). <em>El cotizador de la pestaña Producción ya lo calcula automáticamente.</em>
-                </p>
+
+                <div class="flex flex-col justify-center gap-4">
+                    <div class="bg-blue-500/10 p-4 rounded-xl border border-blue-500/20 text-center">
+                        <p class="text-sm text-blue-600 dark:text-blue-400 font-semibold mb-1">Longitud Final del Accesorio:</p>
+                        <p class="text-3xl font-black text-blue-500 my-1" id="calc-result-final">18 cm</p>
+                        <p class="text-xs opacity-60">Medida base + 2cm de holgura y broche</p>
+                    </div>
+                    <div class="bg-green-500/10 p-4 rounded-xl border border-green-500/20 text-center">
+                        <p class="text-sm text-green-600 dark:text-green-400 font-semibold mb-1">Corta cada tira de hilo de:</p>
+                        <p class="text-4xl font-black text-green-500 my-1" id="calc-result">99 cm</p>
+                        <p class="text-xs opacity-60 mt-2">Si necesitas doblar la tira por la mitad (ej. para nudo inicial central), corta tiras enteras de <span id="calc-result-double" class="font-bold text-green-600 dark:text-green-400">198</span> cm.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Enciclopedia -->
         <section class="mb-12">
-            <h2 class="text-4xl font-bold text-center mb-2"><i class="fas fa-book-open text-indigo-500 mr-3"></i>Enciclopedia de Patrones (10 Estilos)</h2>
-            <p class="text-center opacity-70 mb-10">Técnicas, moldes y paso a paso detallado</p>
+            <h2 class="text-4xl font-bold text-center mb-2"><i class="fas fa-book-open text-indigo-500 mr-3"></i>Enciclopedia Maestra de Patrones</h2>
+            <p class="text-center opacity-70 mb-10">Paso a paso ordenado para producción profesional</p>
 
             <div class="grid lg:grid-cols-2 gap-8">
+                
                 <!-- TEJIDO 1 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
                     <div class="bg-indigo-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">1. Redonda Clásica (Kongo Gumi)</h3><span class="bg-indigo-800 text-xs px-3 py-1 rounded-full font-semibold border border-indigo-400">8 Hilos</span></div>
@@ -203,34 +234,44 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/1.jpg" alt="Kongo Gumi"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Posición:</strong> Coloca dos hilos en el Norte (32,1), Este (8,9), Sur (16,17) y Oeste (24,25). Agrega el peso al nudo central.</li>
-                            <li>Toma el hilo de <strong>arriba a la derecha (1)</strong> y bájalo a la ranura libre a la derecha abajo (15).</li>
-                            <li>Toma el hilo de <strong>abajo a la izquierda (17)</strong> y súbelo a la ranura libre a la izquierda arriba (31).</li>
-                            <li>Gira el disco redondo 90° a la izquierda (sentido antihorario) para que el lado Este quede en la posición Norte. Repite la secuencia.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Doblez</span> Corta <strong>4 tiras</strong> de hilo. Junta las puntas, dóblalas por la mitad y haz un nudo en el bucle central (obteniendo 8 hebras de trabajo).</li>
+                            <li><span class="step-title">2. Montaje</span> Pasa el nudo por el agujero del disco hacia abajo y cuelga el peso (Omori).</li>
+                            <li><span class="step-title">3. Posición Inicial</span> Coloca 2 hilos arriba en Norte (32, 1), 2 en Este (8, 9), 2 en Sur (16, 17) y 2 en Oeste (24, 25).</li>
+                            <li><span class="step-title">4. Movimientos</span> 
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Toma el hilo de <strong>arriba a la derecha (1)</strong> y bájalo a la ranura derecha de abajo (15).</li>
+                                    <li>Toma el hilo de <strong>abajo a la izquierda (17)</strong> y súbelo a la ranura izquierda de arriba (31).</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">5. Rotación</span> Gira el disco 90° a la izquierda (antihorario). El lado Este ahora será tu nuevo Norte. Repite los movimientos.</li>
+                        </ul>
                     </div>
                 </div>
 
                 <!-- TEJIDO 2 -->
                 <div class="card-custom rounded-2xl shadow-lg overflow-hidden border flex flex-col">
-                    <div class="bg-pink-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">2. Espiral de Color</h3><span class="bg-pink-800 text-xs px-3 py-1 rounded-full font-semibold border border-pink-400">8 Hilos</span></div>
+                    <div class="bg-pink-600 px-6 py-4 text-white flex justify-between items-center"><h3 class="text-xl font-bold">2. Espiral de Color (Neón)</h3><span class="bg-pink-800 text-xs px-3 py-1 rounded-full font-semibold border border-pink-400">8 Hilos</span></div>
                     <div class="p-6 flex-grow flex flex-col">
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/2.jpg" alt="Espiral"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li>Corta 4 hilos de un Color A y 4 hilos de un Color B contrastante.</li>
-                            <li><strong>Posición:</strong> Acomoda los 4 hilos del Color A en los polos Norte y Sur. Acomoda los 4 hilos del Color B en Este y Oeste.</li>
-                            <li>Aplica la técnica Kongo Gumi estándar: el hilo superior derecho baja, el inferior izquierdo sube.</li>
-                            <li>Gira el disco 90° a la izquierda. La formación en espiral es automática debido a la alternancia de los colores en los cuadrantes.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Doblez</span> Corta <strong>2 tiras del Color A</strong> y <strong>2 tiras del Color B</strong>. Dobla todas por la mitad y ata un nudo en el bucle central (tendrás 4 hebras de A y 4 de B).</li>
+                            <li><span class="step-title">2. Montaje</span> Pasa el nudo por el centro del disco y cuelga el peso.</li>
+                            <li><span class="step-title">3. Posición Inicial</span> Acomoda los 4 hilos del <strong>Color A</strong> en Norte (32, 1) y Sur (16, 17). Acomoda los 4 hilos del <strong>Color B</strong> en Este (8, 9) y Oeste (24, 25).</li>
+                            <li><span class="step-title">4. Movimientos</span> Aplica la misma técnica Kongo Gumi:
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Baja el hilo superior derecho (1) a la ranura inferior derecha (15).</li>
+                                    <li>Sube el hilo inferior izquierdo (17) a la ranura superior izquierda (31).</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">5. Rotación</span> Gira el disco 90° a la izquierda. La espiral se forma automáticamente por el cruce de los colores opuestos.</li>
+                        </ul>
                     </div>
                 </div>
                 
@@ -241,15 +282,26 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/3.jpg" alt="Kaku Gumi"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Atención:</strong> En este tejido <strong>nunca</strong> se gira el disco. Mantenlo fijo siempre de frente.</li>
-                            <li><strong>Cruce Vertical:</strong> Mueve el hilo 1 hacia abajo al 15. Mueve el 17 hacia arriba al 31. Luego, mueve el 32 hacia abajo al 14, y el 16 hacia arriba al 2.</li>
-                            <li><strong>Cruce Horizontal:</strong> Mueve el hilo 9 hacia la izquierda al 23. Mueve el 25 hacia la derecha al 7. Luego, mueve el 8 hacia la izquierda al 26, y el 24 hacia la derecha al 10.</li>
-                            <li>Reajusta todos los hilos hacia el centro y repite desde el cruce vertical para crear las 4 caras planas.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Montaje</span> Corta <strong>4 tiras</strong>, dobla a la mitad, haz el nudo y coloca el peso en el agujero central.</li>
+                            <li><span class="step-title">2. Posición Inicial</span> Norte (32, 1), Este (8, 9), Sur (16, 17), Oeste (24, 25).</li>
+                            <li><span class="step-title">3. Advertencia</span> <strong>NUNCA GIRES EL DISCO</strong>. Se mantiene estático de frente.</li>
+                            <li><span class="step-title">4. Cruce Vertical</span> 
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Baja el hilo 1 al 15. Sube el hilo 17 al 31.</li>
+                                    <li>Baja el hilo 32 al 14. Sube el hilo 16 al 2.</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">5. Cruce Horizontal</span> 
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Mueve el hilo 9 a la izquierda (23). Mueve el hilo 25 a la derecha (7).</li>
+                                    <li>Mueve el hilo 8 a la izquierda (26). Mueve el hilo 24 a la derecha (10).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Nota:</strong> Reajusta todos los hilos hacia el centro y repite desde el cruce vertical.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -260,16 +312,22 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/4.jpg" alt="Hira Gumi"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-square mr-1"></i>Placa Cuadrada</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Posición:</strong> En la Placa Cuadrada, agrupa 5 hilos en las ranuras centrales superiores y 5 en las centrales inferiores.</li>
-                            <li>Baja el hilo del <strong>extremo derecho (arriba)</strong> hacia la posición interior izquierda (abajo).</li>
-                            <li>Sube el hilo del <strong>extremo izquierdo (abajo)</strong> hacia la posición interior derecha (arriba).</li>
-                            <li>Baja el hilo del <strong>extremo izquierdo (arriba)</strong> hacia la posición interior derecha (abajo).</li>
-                            <li>Sube el hilo del <strong>extremo derecho (abajo)</strong> hacia la posición interior izquierda (arriba). Compacta los hilos al centro.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Doblez</span> Corta <strong>5 tiras</strong> de hilo grueso. Dobla por la mitad (tendrás 10 hebras), haz el nudo.</li>
+                            <li><span class="step-title">2. Montaje</span> Pásalo por el agujero rectangular de la Placa Cuadrada y cuelga el peso.</li>
+                            <li><span class="step-title">3. Posición Inicial</span> Acomoda 5 hilos en las ranuras centrales de arriba (ej. 4,5,6,7,8) y 5 hilos en las centrales de abajo (ej. 14,15,16,17,18).</li>
+                            <li><span class="step-title">4. Movimientos Laterales</span> 
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Baja el hilo del <strong>extremo derecho de arriba</strong> al lado derecho del grupo de abajo.</li>
+                                    <li>Sube el hilo del <strong>extremo izquierdo de abajo</strong> al lado izquierdo del grupo de arriba.</li>
+                                    <li>Baja el hilo del <strong>extremo izquierdo de arriba</strong> al lado izquierdo del grupo de abajo.</li>
+                                    <li>Sube el hilo del <strong>extremo derecho de abajo</strong> al lado derecho del grupo de arriba.</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">5. Compactar</span> Reajusta todos los hilos deslizándolos juntos hacia el centro de las ranuras. Repite.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -280,15 +338,15 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/2be7ded08b9ecf6e45cf8a30ac7c0e3d9f520409/5.jpg" alt="Kumihimo Beaded"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Preparación:</strong> Ensarta las mostacillas necesarias en cada hilo. Enrolla el hilo con las cuentas en bobinas.</li>
-                            <li>Inicia la técnica Kongo Gumi estándar con los 8 hilos.</li>
-                            <li>Antes de fijar el hilo en la ranura de destino, suelta <strong>una sola cuenta</strong> hacia el centro.</li>
-                            <li>Asegúrate de que la cuenta quede "atrapada" por debajo del hilo transversal. Repite en la subida, gira y continúa manteniendo la tensión alta.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Abalorios</span> Corta <strong>4 tiras</strong> de nylon, dobla y anuda. <strong>Ensarta las mostacillas</strong> en las 8 hebras resultantes y enrolla el sobrante en bobinas (tama).</li>
+                            <li><span class="step-title">2. Posición Inicial</span> Monta en el disco redondo igual que el tejido 1: N(32,1), E(8,9), S(16,17), O(24,25). Pon el peso.</li>
+                            <li><span class="step-title">3. Movimiento de Bajada</span> Desengancha el hilo 1 (arriba derecha). Desliza <strong>UNA mostacilla</strong> hasta el centro asegurándote de que quede "atrapada" por debajo del hilo horizontal (8 a 24). Fija el hilo en la ranura 15.</li>
+                            <li><span class="step-title">4. Movimiento de Subida</span> Desengancha el hilo 17 (abajo izquierda). Desliza <strong>UNA mostacilla</strong> atrapándola de la misma forma. Fija el hilo en 31.</li>
+                            <li><span class="step-title">5. Rotación</span> Gira el disco 90° a la izquierda y repite la operación manteniendo una tensión estricta.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -299,15 +357,25 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/6.jpg" alt="Kara Yatsu"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-square mr-1"></i>Placa Cuadrada</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Posición:</strong> Acomoda 8 hilos centrados en el borde superior (4 a la izquierda del centro, 4 a la derecha) y 8 hilos idénticos en el borde inferior.</li>
-                            <li>Toma el hilo del <strong>extremo superior derecho</strong> y crúzalo en diagonal hacia la posición interior central del lado derecho (abajo).</li>
-                            <li>Toma el hilo del <strong>extremo superior izquierdo</strong> y crúzalo hacia la posición interior central del lado izquierdo (abajo).</li>
-                            <li>Toma los dos hilos <strong>centrales inferiores</strong> y crúzalos hacia afuera, colocándolos en los extremos exteriores vacíos de arriba.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Doblez</span> Corta <strong>8 tiras</strong> de cordón. Al doblarlas por la mitad tendrás las 16 hebras necesarias. Ata el nudo y cuelga el peso en la Placa Cuadrada.</li>
+                            <li><span class="step-title">2. Posición Inicial</span> Acomoda 8 hilos en las ranuras de arriba (4 a cada lado de la marca central) y 8 hilos idénticos abajo.</li>
+                            <li><span class="step-title">3. Cruce Descendente</span> 
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Toma el hilo del <strong>extremo superior derecho</strong> y crúzalo hacia el interior central del lado derecho (abajo).</li>
+                                    <li>Toma el hilo del <strong>extremo superior izquierdo</strong> y crúzalo hacia el interior central del lado izquierdo (abajo).</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">4. Cruce Ascendente</span>
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Toma el hilo <strong>central derecho de abajo</strong> y súbelo al extremo exterior libre de arriba a la derecha.</li>
+                                    <li>Toma el hilo <strong>central izquierdo de abajo</strong> y súbelo al extremo exterior libre de arriba a la izquierda.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Nota:</strong> Ajusta tensión compactando hacia el centro y repite la secuencia.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -318,15 +386,20 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/7.jpg" alt="Kusari Gumi"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Posición:</strong> Divide los 12 hilos en 3 grupos (ej: Norte, Sureste, Suroeste) de 4 hilos cada uno, formando un triángulo en el disco.</li>
-                            <li>Mueve el hilo del <strong>extremo derecho</strong> del grupo superior, hacia la posición interior izquierda del grupo inferior derecho.</li>
-                            <li>Mueve el hilo del <strong>extremo izquierdo</strong> del grupo superior, hacia la posición interior derecha del grupo inferior izquierdo.</li>
-                            <li>Gira el disco 120° (un tercio de vuelta) para que el siguiente grupo quede arriba y repite iterativamente para crear el eslabón.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Doblez</span> Corta <strong>6 tiras</strong> bicolores. Dobla a la mitad, haz nudo, pasa por el disco redondo y pon peso.</li>
+                            <li><span class="step-title">2. Posición Inicial</span> Divide las 12 hebras formando un triángulo o "Y" de 3 grupos (4 hilos por grupo). Por ejemplo: Grupo 1 arriba (Norte), Grupo 2 abajo-derecha (Sureste), Grupo 3 abajo-izquierda (Suroeste).</li>
+                            <li><span class="step-title">3. Movimientos</span>
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Toma el hilo del <strong>extremo derecho</strong> del Grupo Superior y bájalo al lado derecho del Grupo Inferior-Derecho.</li>
+                                    <li>Toma el hilo del <strong>extremo izquierdo</strong> del Grupo Superior y bájalo al lado izquierdo del Grupo Inferior-Izquierdo.</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">4. Rotación</span> El grupo de arriba ha quedado con 2 hilos. Gira el disco <strong>120° (un tercio de vuelta)</strong> a la izquierda.</li>
+                            <li><span class="step-title">5. Reagrupar</span> El nuevo grupo superior tiene 5 hilos. Reagrupa visualmente para que sean 4 por estación y repite.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -337,15 +410,19 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/ba178c8d7519e8fb1497a816cb6d115555abfc04/8.jpg" alt="Edo Yatsu"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Posición:</strong> Coloca 2 hilos en cada punto cardinal clásico del disco (N, S, E, O). Al requerir cruces largos, consume más hilo.</li>
-                            <li>A diferencia del Kongo Gumi, mueve el hilo <strong>Superior-Derecha</strong> en diagonal cruzando el centro hacia la posición <strong>Inferior-Izquierda</strong>.</li>
-                            <li>Mueve el hilo <strong>Superior-Izquierda</strong> en diagonal cruzando el centro hacia <strong>Inferior-Derecha</strong>.</li>
-                            <li>Gira el disco 90°. Esta alteración en la longitud del cruce empuja los hilos hacia afuera, generando surcos profundos de gran textura.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Doblez</span> Corta <strong>4 tiras</strong> de cordón. Dobla a la mitad, ata el nudo y coloca peso.</li>
+                            <li><span class="step-title">2. Posición Inicial</span> Coloca 2 hilos en cada punto cardinal clásico del disco redondo (N, S, E, O).</li>
+                            <li><span class="step-title">3. Cruce Diagonal Largo</span>
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Toma el hilo <strong>Superior-Derecha (1)</strong> y muévelo en diagonal extrema, cruzando todo el centro, hacia la posición exterior <strong>Inferior-Izquierda (23)</strong>.</li>
+                                    <li>Toma el hilo <strong>Superior-Izquierda (32)</strong> y muévelo en diagonal hacia la posición exterior <strong>Inferior-Derecha (10)</strong>.</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">4. Rotación</span> Gira el disco 90° a la izquierda. Al repetir este cruce extremo, los hilos abrazan el núcleo generando los surcos característicos de la armadura samurái.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -356,15 +433,20 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/9491917120f190895664e5d4b2638226e5c7bf96/9.jpg" alt="Chevron"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-square mr-1"></i>Placa Cuadrada</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Posición Mágica:</strong> En la placa, sitúa 5 hilos arriba y 5 abajo centrados. Los colores deben reflejarse desde el centro (Ej: A-B-C-B-A).</li>
-                            <li>Baja el hilo del <strong>extremo exterior derecho (arriba)</strong> hacia el centro de las ranuras de abajo.</li>
-                            <li>Sube el hilo del <strong>extremo exterior izquierdo (abajo)</strong> hacia el centro de las ranuras de arriba.</li>
-                            <li>Baja el extremo exterior izquierdo (arriba) al centro, y sube el derecho (abajo) al centro. Desliza hacia el centro y compacta ("Golpe de placa").</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte Especial</span> Corta <strong>5 tiras largas</strong> (ej: 2 color A, 2 color B, 1 color C). Al doblarlas a la mitad y anudarlas tendrás 10 hebras de trabajo.</li>
+                            <li><span class="step-title">2. Posición en Espejo</span> En la Placa, sitúa 5 hilos arriba y 5 abajo centrados. Los colores deben reflejarse desde el centro (Ej: Arriba A-B-C-B-A | Abajo A-B-C-B-A).</li>
+                            <li><span class="step-title">3. Movimientos Hacia el Centro</span>
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Baja el hilo del <strong>extremo exterior derecho (arriba)</strong> al centro exacto de las ranuras de abajo.</li>
+                                    <li>Sube el hilo del <strong>extremo exterior izquierdo (abajo)</strong> al centro exacto de las ranuras de arriba.</li>
+                                    <li>Baja el <strong>extremo exterior izquierdo (arriba)</strong> al centro, y sube el <strong>derecho (abajo)</strong> al centro.</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">4. Ajuste</span> Da el "Golpe de placa" (empuja el nudo arriba) y desliza los hilos hacia los lados (abriendo el centro) para prepararlos para la siguiente ronda.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -375,15 +457,19 @@
                         <div class="real-img-container mb-4 h-48 border-0 shadow-lg"><img src="https://raw.githubusercontent.com/juanmiguel0927/Kumihimo/9491917120f190895664e5d4b2638226e5c7bf96/10.jpg" alt="Floral Abalorios"></div>
                         <div class="flex gap-2 mb-4 flex-wrap">
                             <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-circle mr-1"></i>Disco Redondo</span>
-                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Tira = (L + 15cm) × 3.5</span>
+                            <span class="info-badge px-2 py-1 rounded text-xs font-bold"><i class="fas fa-calculator mr-1"></i>Mult. x3.5</span>
                         </div>
-                        <h4 class="font-bold text-md mb-2 border-b pb-1 opacity-80">Paso a Paso Detallado</h4>
-                        <ol class="list-decimal pl-4 step-list text-sm opacity-90 flex-grow">
-                            <li><strong>Posición:</strong> Distribuye los 16 hilos en pares alrededor de todo el perímetro del disco redondo (formando 8 estaciones equidistantes).</li>
-                            <li>Ensarta meticulosamente las mostacillas calculando la paleta de color (base, flores y hojas).</li>
-                            <li>Teje usando la técnica de nudo redondo (el superior-derecho baja, el inferior-izquierdo sube).</li>
-                            <li>Inserta la cuenta correspondiente en el centro en cada movimiento. Gira la estación (45° en lugar de 90°) y repite pacientemente.</li>
-                        </ol>
+                        <ul class="step-list text-sm opacity-90 flex-grow list-none p-0 m-0">
+                            <li><span class="step-title">1. Corte y Abalorios</span> Corta <strong>8 tiras</strong> finas. Dobla y anuda para obtener 16. Ensarta las mostacillas calculando la paleta de colores de la flor. Usa bobinas y monta peso.</li>
+                            <li><span class="step-title">2. Posición Inicial</span> Distribuye las 16 hebras en 8 pares (estaciones) alrededor del disco: (32,1), (4,5), (8,9), (12,13), (16,17), (20,21), (24,25), (28,29).</li>
+                            <li><span class="step-title">3. Movimientos</span> Es la regla base del Kongo Gumi aplicada a 16 hilos: 
+                                <ul class="list-disc pl-4 mt-1">
+                                    <li>Desliza UNA mostacilla al centro. El hilo superior-derecho baja al lado derecho del par opuesto.</li>
+                                    <li>Desliza UNA mostacilla. El hilo inferior-izquierdo sube al lado izquierdo del par superior.</li>
+                                </ul>
+                            </li>
+                            <li><span class="step-title">4. Rotación Corta</span> Gira el disco <strong>SOLO 45° a la izquierda</strong> (avanza al siguiente par de hilos, no al cuadrante de 90°) y repite la operación.</li>
+                        </ul>
                     </div>
                 </div>
 
@@ -408,14 +494,13 @@
                     </div>
                 </div>
                 <div class="p-6 flex-grow flex flex-col">
-                    <!-- Formulario Agregar Material -->
                     <form id="form-inventory" class="mb-6 bg-black/5 dark:bg-white/5 p-4 rounded-xl border border-black/10 dark:border-white/10">
                         <div class="flex justify-between items-center mb-3">
                             <h3 class="font-bold text-sm">Nuevo Material</h3>
                             <button type="button" onclick="clearInventory()" class="text-xs text-red-500 hover:text-red-700 font-bold"><i class="fas fa-broom mr-1"></i> Limpiar Todo</button>
                         </div>
                         <div class="grid grid-cols-2 gap-3 mb-3">
-                            <input type="text" id="inv-name" placeholder="Nombre (ej. Hilo Cola de Ratón Azul)" class="col-span-2 p-2 rounded text-sm" required>
+                            <input type="text" id="inv-name" placeholder="Nombre (ej. Hilo Cola de Ratón)" class="col-span-2 p-2 rounded text-sm" required>
                             <select id="inv-type" class="p-2 rounded text-sm bg-white dark:bg-gray-800">
                                 <option value="hilo">Hilo / Cordón</option>
                                 <option value="abalorio">Cuentas / Abalorios</option>
@@ -430,12 +515,9 @@
                             <input type="number" step="0.01" id="inv-qty" placeholder="Cantidad Total" class="p-2 rounded text-sm" required min="0.01">
                             <input type="number" id="inv-cost" placeholder="Costo Total (COP)" class="p-2 rounded text-sm" required min="1">
                         </div>
-                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-sm transition shadow">
-                            <i class="fas fa-plus mr-1"></i> Guardar en Bodega
-                        </button>
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded text-sm transition shadow"><i class="fas fa-plus mr-1"></i> Guardar en Bodega</button>
                     </form>
 
-                    <!-- Tabla de Inventario -->
                     <div class="overflow-x-auto flex-grow rounded-lg border border-black/10 dark:border-white/10">
                         <table class="w-full text-sm text-left">
                             <thead class="text-xs uppercase bg-black/5 dark:bg-white/5 opacity-70 sticky top-0">
@@ -445,9 +527,7 @@
                                     <th class="px-3 py-2 text-center">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="inventory-list">
-                                <!-- Filas dinámicas -->
-                            </tbody>
+                            <tbody id="inventory-list"></tbody>
                         </table>
                     </div>
                 </div>
@@ -488,25 +568,18 @@
                             </div>
                         </div>
 
-                        <!-- Selección Materiales -->
                         <div class="bg-black/5 dark:bg-white/5 p-4 rounded-lg border border-black/10 dark:border-white/10 space-y-3">
                             <div>
                                 <label class="block text-xs font-bold opacity-70 mb-1">Hilo Principal a utilizar:</label>
-                                <select id="prod-thread" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()">
-                                    <option value="">-- Seleccionar de Bodega --</option>
-                                </select>
+                                <select id="prod-thread" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()"><option value="">-- Seleccionar de Bodega --</option></select>
                             </div>
                             <div id="beads-selector-container" style="display:none;">
                                 <label class="block text-xs font-bold opacity-70 mb-1">Abalorios a utilizar:</label>
-                                <select id="prod-beads" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()">
-                                    <option value="">-- Seleccionar de Bodega --</option>
-                                </select>
+                                <select id="prod-beads" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()"><option value="">-- Seleccionar de Bodega --</option></select>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold opacity-70 mb-1">Broche / Cierre:</label>
-                                <select id="prod-clasp" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()">
-                                    <option value="">-- Sin Broche --</option>
-                                </select>
+                                <select id="prod-clasp" class="w-full p-2 rounded text-xs font-semibold bg-white dark:bg-gray-800" onchange="calcularPrecios()"><option value="">-- Sin Broche --</option></select>
                             </div>
                         </div>
                     </div>
@@ -534,12 +607,10 @@
                         <i class="fas fa-hammer mr-2"></i> Fabricar y Descontar Stock
                     </button>
 
-                    <!-- Historial de Producción -->
+                    <!-- Historial -->
                     <div>
                         <h3 class="text-sm font-bold opacity-70 mb-2 border-b border-black/10 dark:border-white/10 pb-1"><i class="fas fa-history mr-1"></i> Últimas Fabricaciones</h3>
-                        <ul id="history-list" class="space-y-2 text-xs">
-                            <!-- Historial dinámico -->
-                        </ul>
+                        <ul id="history-list" class="space-y-2 text-xs"></ul>
                     </div>
                 </div>
             </section>
@@ -558,448 +629,202 @@
     </footer>
 
     <script>
-        // Año dinámico en el footer (2026 configurado por defecto actual)
         document.getElementById('current-year').textContent = new Date().getFullYear();
+        const USD_RATE = 4000; const EUR_RATE = 4300;
 
-        const USD_RATE = 4000;
-        const EUR_RATE = 4300;
-
-        // --- SISTEMA DE PESTAÑAS ---
         function switchTab(tabId) {
-            document.getElementById('tab-guide').classList.add('hidden');
-            document.getElementById('tab-inventory').classList.add('hidden');
-            document.getElementById('btn-tab-guide').classList.remove('active');
-            document.getElementById('btn-tab-inventory').classList.remove('active');
-
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-            document.getElementById('btn-tab-' + tabId).classList.add('active');
-            
-            if(tabId === 'inventory') {
-                renderInventory();
-                populateDropdowns();
-                calcularPrecios();
-                renderHistory();
-            }
+            document.getElementById('tab-guide').classList.add('hidden'); document.getElementById('tab-inventory').classList.add('hidden');
+            document.getElementById('btn-tab-guide').classList.remove('active'); document.getElementById('btn-tab-inventory').classList.remove('active');
+            document.getElementById('tab-' + tabId).classList.remove('hidden'); document.getElementById('btn-tab-' + tabId).classList.add('active');
+            if(tabId === 'inventory') { renderInventory(); populateDropdowns(); calcularPrecios(); renderHistory(); }
         }
 
-        // --- MODO OSCURO ---
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             const icon = document.getElementById('theme-icon');
-            if(document.body.classList.contains('dark-mode')) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-            }
+            if(document.body.classList.contains('dark-mode')) { icon.classList.replace('fa-moon', 'fa-sun'); } else { icon.classList.replace('fa-sun', 'fa-moon'); }
         }
 
-        // --- TOAST NOTIFICATIONS ---
         function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            const icon = type === 'success' ? '<i class="fas fa-check-circle text-emerald-500 text-xl"></i>' : '<i class="fas fa-exclamation-circle text-red-500 text-xl"></i>';
+            const container = document.getElementById('toast-container'); const toast = document.createElement('div');
+            toast.className = `toast ${type}`; const icon = type === 'success' ? '<i class="fas fa-check-circle text-emerald-500 text-xl"></i>' : '<i class="fas fa-exclamation-circle text-red-500 text-xl"></i>';
             toast.innerHTML = `${icon} <span class="text-sm font-semibold">${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // --- DIBUJO DE MOLDES ---
         function drawDisk(svgId) {
-            const svgNS = "http://www.w3.org/2000/svg";
-            const svg = document.getElementById(svgId);
-            if(!svg) return;
+            const svgNS = "http://www.w3.org/2000/svg"; const svg = document.getElementById(svgId); if(!svg) return;
             const cx = 200; const cy = 200; const radius = 180; const holeRadius = 35;
             while (svg.firstChild) { svg.removeChild(svg.firstChild); }
-            const outerCircle = document.createElementNS(svgNS, "circle");
-            outerCircle.setAttribute("cx", cx); outerCircle.setAttribute("cy", cy); outerCircle.setAttribute("r", radius);
-            outerCircle.setAttribute("fill", "none"); outerCircle.setAttribute("stroke", "#1f2937"); outerCircle.setAttribute("stroke-width", "4"); outerCircle.setAttribute("stroke-dasharray", "10, 5"); 
-            svg.appendChild(outerCircle);
-            const innerCircle = document.createElementNS(svgNS, "circle");
-            innerCircle.setAttribute("cx", cx); innerCircle.setAttribute("cy", cy); innerCircle.setAttribute("r", holeRadius);
-            innerCircle.setAttribute("fill", "none"); innerCircle.setAttribute("stroke", "#1f2937"); innerCircle.setAttribute("stroke-width", "3"); innerCircle.setAttribute("stroke-dasharray", "5, 5");
-            svg.appendChild(innerCircle);
+            const outerCircle = document.createElementNS(svgNS, "circle"); outerCircle.setAttribute("cx", cx); outerCircle.setAttribute("cy", cy); outerCircle.setAttribute("r", radius); outerCircle.setAttribute("fill", "none"); outerCircle.setAttribute("stroke", "#1f2937"); outerCircle.setAttribute("stroke-width", "4"); outerCircle.setAttribute("stroke-dasharray", "10, 5"); svg.appendChild(outerCircle);
+            const innerCircle = document.createElementNS(svgNS, "circle"); innerCircle.setAttribute("cx", cx); innerCircle.setAttribute("cy", cy); innerCircle.setAttribute("r", holeRadius); innerCircle.setAttribute("fill", "none"); innerCircle.setAttribute("stroke", "#1f2937"); innerCircle.setAttribute("stroke-width", "3"); innerCircle.setAttribute("stroke-dasharray", "5, 5"); svg.appendChild(innerCircle);
             const directions = [{ text: "N", angle: -90 }, { text: "E", angle: 0 }, { text: "S", angle: 90 }, { text: "O", angle: 180 }];
             directions.forEach(dir => {
-                const rad = dir.angle * (Math.PI / 180);
-                const tx = cx + 70 * Math.cos(rad); const ty = cy + 70 * Math.sin(rad);
-                const text = document.createElementNS(svgNS, "text");
-                text.setAttribute("x", tx); text.setAttribute("y", ty); text.setAttribute("fill", "#6b7280"); text.setAttribute("font-size", "14px"); text.setAttribute("font-weight", "bold");
-                text.setAttribute("text-anchor", "middle"); text.setAttribute("dominant-baseline", "middle");
-                text.textContent = dir.text; svg.appendChild(text);
+                const rad = dir.angle * (Math.PI / 180); const tx = cx + 70 * Math.cos(rad); const ty = cy + 70 * Math.sin(rad);
+                const text = document.createElementNS(svgNS, "text"); text.setAttribute("x", tx); text.setAttribute("y", ty); text.setAttribute("fill", "#6b7280"); text.setAttribute("font-size", "14px"); text.setAttribute("font-weight", "bold"); text.setAttribute("text-anchor", "middle"); text.setAttribute("dominant-baseline", "middle"); text.textContent = dir.text; svg.appendChild(text);
             });
             for (let i = 1; i <= 32; i++) {
-                let angleDegrees = -90 + 5.625 + ((i - 1) * 11.25);
-                let angleRad = angleDegrees * (Math.PI / 180);
+                let angleRad = (-90 + 5.625 + ((i - 1) * 11.25)) * (Math.PI / 180);
                 let x1 = cx + (radius - 25) * Math.cos(angleRad); let y1 = cy + (radius - 25) * Math.sin(angleRad);
                 let x2 = cx + radius * Math.cos(angleRad); let y2 = cy + radius * Math.sin(angleRad);
-                const line = document.createElementNS(svgNS, "line");
-                line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2);
-                line.setAttribute("class", "slot-line"); svg.appendChild(line);
+                const line = document.createElementNS(svgNS, "line"); line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2); line.setAttribute("class", "slot-line"); svg.appendChild(line);
                 let tx = cx + (radius - 45) * Math.cos(angleRad); let ty = cy + (radius - 45) * Math.sin(angleRad);
-                const text = document.createElementNS(svgNS, "text");
-                text.setAttribute("x", tx); text.setAttribute("y", ty); text.setAttribute("class", "slot-text");
-                text.textContent = i; svg.appendChild(text);
+                const text = document.createElementNS(svgNS, "text"); text.setAttribute("x", tx); text.setAttribute("y", ty); text.setAttribute("class", "slot-text"); text.textContent = i; svg.appendChild(text);
             }
-            const dotAngles = [-90, 0, 90, 180];
-            dotAngles.forEach(angle => {
-                let dotRad = angle * (Math.PI / 180);
-                let dx = cx + 115 * Math.cos(dotRad); let dy = cy + 115 * Math.sin(dotRad);
-                const dot = document.createElementNS(svgNS, "circle");
-                dot.setAttribute("cx", dx); dot.setAttribute("cy", dy); dot.setAttribute("r", "4");
-                dot.setAttribute("fill", "#ef4444");
-                svg.appendChild(dot);
-            });
+            [-90, 0, 90, 180].forEach(angle => { let rad = angle * (Math.PI / 180); const dot = document.createElementNS(svgNS, "circle"); dot.setAttribute("cx", cx + 115 * Math.cos(rad)); dot.setAttribute("cy", cy + 115 * Math.sin(rad)); dot.setAttribute("r", "4"); dot.setAttribute("fill", "#ef4444"); svg.appendChild(dot); });
         }
 
         function drawSquarePlate(svgId) {
-            const svgNS = "http://www.w3.org/2000/svg";
-            const svg = document.getElementById(svgId);
-            if(!svg) return;
+            const svgNS = "http://www.w3.org/2000/svg"; const svg = document.getElementById(svgId); if(!svg) return;
             while (svg.firstChild) { svg.removeChild(svg.firstChild); }
-            
-            const outerRect = document.createElementNS(svgNS, "rect");
-            outerRect.setAttribute("x", "30"); outerRect.setAttribute("y", "30"); 
-            outerRect.setAttribute("width", "340"); outerRect.setAttribute("height", "340");
-            outerRect.setAttribute("rx", "30");
-            outerRect.setAttribute("fill", "none"); outerRect.setAttribute("stroke", "#059669"); 
-            outerRect.setAttribute("stroke-width", "4"); outerRect.setAttribute("stroke-dasharray", "10, 5");
-            svg.appendChild(outerRect);
-
-            const innerRect = document.createElementNS(svgNS, "rect");
-            innerRect.setAttribute("x", "165"); innerRect.setAttribute("y", "165"); 
-            innerRect.setAttribute("width", "70"); innerRect.setAttribute("height", "70");
-            innerRect.setAttribute("rx", "15");
-            innerRect.setAttribute("fill", "none"); innerRect.setAttribute("stroke", "#059669"); 
-            innerRect.setAttribute("stroke-width", "3"); innerRect.setAttribute("stroke-dasharray", "5, 5");
-            svg.appendChild(innerRect);
-
+            const outerRect = document.createElementNS(svgNS, "rect"); outerRect.setAttribute("x", "30"); outerRect.setAttribute("y", "30"); outerRect.setAttribute("width", "340"); outerRect.setAttribute("height", "340"); outerRect.setAttribute("rx", "30"); outerRect.setAttribute("fill", "none"); outerRect.setAttribute("stroke", "#059669"); outerRect.setAttribute("stroke-width", "4"); outerRect.setAttribute("stroke-dasharray", "10, 5"); svg.appendChild(outerRect);
+            const innerRect = document.createElementNS(svgNS, "rect"); innerRect.setAttribute("x", "165"); innerRect.setAttribute("y", "165"); innerRect.setAttribute("width", "70"); innerRect.setAttribute("height", "70"); innerRect.setAttribute("rx", "15"); innerRect.setAttribute("fill", "none"); innerRect.setAttribute("stroke", "#059669"); innerRect.setAttribute("stroke-width", "3"); innerRect.setAttribute("stroke-dasharray", "5, 5"); svg.appendChild(innerRect);
             const spacing = 280 / 9; 
-            
             function addSlot(x1, y1, x2, y2, tx, ty, num) {
-                const line = document.createElementNS(svgNS, "line");
-                line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2);
-                line.setAttribute("stroke", "#1f2937"); line.setAttribute("stroke-width", "3"); line.setAttribute("stroke-linecap", "round");
-                svg.appendChild(line);
-                const text = document.createElementNS(svgNS, "text");
-                text.setAttribute("x", tx); text.setAttribute("y", ty);
-                text.setAttribute("font-family", "sans-serif"); text.setAttribute("font-weight", "bold"); 
-                text.setAttribute("font-size", "12px"); text.setAttribute("fill", "#1f2937"); 
-                text.setAttribute("text-anchor", "middle"); text.setAttribute("dominant-baseline", "middle");
-                text.textContent = num; svg.appendChild(text);
+                const line = document.createElementNS(svgNS, "line"); line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2); line.setAttribute("stroke", "#1f2937"); line.setAttribute("stroke-width", "3"); line.setAttribute("stroke-linecap", "round"); svg.appendChild(line);
+                const text = document.createElementNS(svgNS, "text"); text.setAttribute("x", tx); text.setAttribute("y", ty); text.setAttribute("font-family", "sans-serif"); text.setAttribute("font-weight", "bold"); text.setAttribute("font-size", "12px"); text.setAttribute("fill", "#1f2937"); text.setAttribute("text-anchor", "middle"); text.setAttribute("dominant-baseline", "middle"); text.textContent = num; svg.appendChild(text);
             }
-
-            for (let i = 0; i < 10; i++) {
-                let pos = 60 + (i * spacing);
-                addSlot(pos, 30, pos, 50, pos, 20, i + 1);
-                addSlot(pos, 350, pos, 370, pos, 380, i + 11);
-            }
-            for (let i = 0; i < 10; i++) {
-                let pos = 60 + (i * spacing);
-                addSlot(30, pos, 50, pos, 15, pos, i + 21);
-                addSlot(350, pos, 370, pos, 385, pos, i + 31);
-            }
+            for (let i = 0; i < 10; i++) { let pos = 60 + (i * spacing); addSlot(pos, 30, pos, 50, pos, 20, i + 1); addSlot(pos, 350, pos, 370, pos, 380, i + 11); }
+            for (let i = 0; i < 10; i++) { let pos = 60 + (i * spacing); addSlot(30, pos, 50, pos, 15, pos, i + 21); addSlot(350, pos, 370, pos, 385, pos, i + 31); }
         }
 
-        drawDisk("kumihimo-disk"); drawDisk("kumihimo-disk-print");
-        drawSquarePlate("kumihimo-square"); drawSquarePlate("kumihimo-square-print");
-
-        // --- DESCARGA PDF MULTIPLE ---
         function descargarPDF(tipo) {
-            let wrapperId, containerId, filename;
-            if(tipo === 'redondo') { wrapperId = 'pdf-wrapper-redondo'; containerId = 'pdf-container-redondo'; filename = 'Plantilla_Redonda_JuanMiguel.pdf'; drawDisk("kumihimo-disk-print"); } 
-            else if (tipo === 'cuadrado') { wrapperId = 'pdf-wrapper-cuadrado'; containerId = 'pdf-container-cuadrado'; filename = 'Plantilla_Cuadrada_JuanMiguel.pdf'; drawSquarePlate("kumihimo-square-print"); } 
-            else if (tipo === 'taller') { wrapperId = 'pdf-wrapper-taller'; containerId = 'pdf-container-taller'; filename = 'Guia_Insumos_Taller_JuanMiguel.pdf'; }
+            let wId, cId, fname;
+            if(tipo === 'redondo') { wId = 'pdf-wrapper-redondo'; cId = 'pdf-container-redondo'; fname = 'Plantilla_Redonda_JuanMiguel.pdf'; drawDisk("kumihimo-disk-print"); } 
+            else if (tipo === 'cuadrado') { wId = 'pdf-wrapper-cuadrado'; cId = 'pdf-container-cuadrado'; fname = 'Plantilla_Cuadrada_JuanMiguel.pdf'; drawSquarePlate("kumihimo-square-print"); } 
+            else if (tipo === 'taller') { wId = 'pdf-wrapper-taller'; cId = 'pdf-container-taller'; fname = 'Guia_Insumos_Taller_JuanMiguel.pdf'; }
             
-            const wrapper = document.getElementById(wrapperId);
-            const element = document.getElementById(containerId);
-            const currentScroll = window.scrollY;
-            
-            wrapper.style.display = 'block';
-            window.scrollTo(0, 0); 
-            showToast("Generando PDF...", "success");
-
-            const opt = { margin: 0, filename: filename, image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, width: 794 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            const w = document.getElementById(wId); const e = document.getElementById(cId); const s = window.scrollY;
+            w.style.display = 'block'; window.scrollTo(0, 0); showToast("Generando PDF...", "success");
+            const opt = { margin: 0, filename: fname, image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, width: 794 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
 
             setTimeout(() => {
-                html2pdf().set(opt).from(element).save().then(() => {
-                    wrapper.style.display = 'none'; 
-                    window.scrollTo(0, currentScroll);
-                    showToast("Documento descargado", "success");
-                }).catch(err => {
-                    wrapper.style.display = 'none'; 
-                    window.scrollTo(0, currentScroll);
-                    showToast("Error al generar PDF", "error");
-                });
+                html2pdf().set(opt).from(e).save().then(() => { w.style.display = 'none'; window.scrollTo(0, s); showToast("Documento descargado", "success"); })
+                .catch(err => { w.style.display = 'none'; window.scrollTo(0, s); showToast("Error al generar PDF", "error"); });
             }, 150);
         }
 
-        // --- SISTEMA DE INVENTARIO Y ERP ---
-        let inventory = JSON.parse(localStorage.getItem('kumi_inventory_v5')) || [];
-        let productionHistory = JSON.parse(localStorage.getItem('kumi_history_v5')) || [];
-
-        const formatCOP = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
-
-        function saveInventory() {
-            localStorage.setItem('kumi_inventory_v5', JSON.stringify(inventory));
-            localStorage.setItem('kumi_history_v5', JSON.stringify(productionHistory));
-            renderInventory();
-            populateDropdowns();
-            calcularPrecios();
-            renderHistory();
+        // Calculadora Inteligente Anatómica
+        function cambiarTipoAccesorio() {
+            const tipo = document.getElementById('calc-tipo').value;
+            const inputMedida = document.getElementById('calc-medida');
+            if (tipo === 'pulsera') inputMedida.value = 16;
+            if (tipo === 'tobillera') inputMedida.value = 22;
+            if (tipo === 'collar') inputMedida.value = 45;
         }
 
-        function renderInventory() {
-            const tbody = document.getElementById('inventory-list');
-            tbody.innerHTML = '';
+        function calcularHilosAvanzado() {
+            const medidaBase = parseFloat(document.getElementById('calc-medida').value) || 16;
+            const multiplicador = parseFloat(document.getElementById('calc-patron').value) || 3;
             
-            if(inventory.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 opacity-50 italic">Tu bodega está vacía. Añade materiales.</td></tr>`;
-                return;
-            }
+            const holgura = 2; // cm de comodidad + espacio broche
+            const longitudFinal = medidaBase + holgura;
+            
+            // Fórmula: (L + 15) * multi
+            const longitudHilo = Math.ceil((longitudFinal + 15) * multiplicador);
+            const longitudDoblada = longitudHilo * 2;
 
+            document.getElementById('calc-result-final').textContent = longitudFinal + " cm";
+            document.getElementById('calc-result').textContent = longitudHilo + " cm";
+            document.getElementById('calc-result-double').textContent = longitudDoblada + " cm";
+            showToast("Medidas calculadas correctamente", "success");
+        }
+
+        // Inventario
+        let inventory = JSON.parse(localStorage.getItem('kumi_inventory_v8')) || [];
+        let productionHistory = JSON.parse(localStorage.getItem('kumi_history_v8')) || [];
+
+        function saveInventory() { localStorage.setItem('kumi_inventory_v8', JSON.stringify(inventory)); localStorage.setItem('kumi_history_v8', JSON.stringify(productionHistory)); renderInventory(); populateDropdowns(); calcularPrecios(); renderHistory(); }
+
+        function renderInventory() {
+            const tbody = document.getElementById('inventory-list'); tbody.innerHTML = '';
+            if(inventory.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 opacity-50 italic">Tu bodega está vacía. Añade materiales.</td></tr>`; return; }
             inventory.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition";
-                
-                let icon = '';
-                if(item.type === 'hilo') { icon = '<i class="fas fa-cut text-indigo-500 mr-2"></i>'; }
-                if(item.type === 'abalorio') { icon = '<i class="fas fa-circle text-pink-500 mr-2"></i>'; }
-                if(item.type === 'broche') { icon = '<i class="fas fa-link text-gray-500 mr-2"></i>'; }
-
-                tr.innerHTML = `
-                    <td class="px-3 py-2 font-semibold flex items-center h-full">${icon}${item.name}</td>
-                    <td class="px-3 py-2 text-center">
-                        <span class="${item.stock <= 0 ? 'text-red-500 font-bold' : ''}">${Number(item.stock).toFixed(2).replace(/\.00$/, '')} ${item.unit}</span>
-                    </td>
-                    <td class="px-3 py-2 flex justify-center gap-2">
-                        <button onclick="addStockPrompt(${item.id})" class="text-emerald-500 hover:text-emerald-700 transition px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 rounded" title="Reabastecer">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button onclick="deleteItem(${item.id})" class="text-red-500 hover:text-red-700 transition px-2 py-1 bg-red-100 dark:bg-red-900/30 rounded" title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                `;
+                const tr = document.createElement('tr'); tr.className = "border-b border-black/10 dark:border-white/10 hover:bg-black/5 dark:hover:bg-white/5 transition";
+                let icon = item.type === 'hilo' ? '<i class="fas fa-cut text-indigo-500 mr-2"></i>' : item.type === 'abalorio' ? '<i class="fas fa-circle text-pink-500 mr-2"></i>' : '<i class="fas fa-link text-gray-500 mr-2"></i>';
+                tr.innerHTML = `<td class="px-3 py-2 font-semibold flex items-center h-full">${icon}${item.name}</td><td class="px-3 py-2 text-center"><span class="${item.stock <= 0 ? 'text-red-500 font-bold' : ''}">${Number(item.stock).toFixed(2).replace(/\.00$/, '')} ${item.unit}</span></td><td class="px-3 py-2 flex justify-center gap-2"><button onclick="addStockPrompt(${item.id})" class="text-emerald-500 hover:text-emerald-700 transition px-2 py-1 bg-emerald-100 dark:bg-emerald-900/30 rounded" title="Reabastecer"><i class="fas fa-plus"></i></button><button onclick="deleteItem(${item.id})" class="text-red-500 hover:text-red-700 transition px-2 py-1 bg-red-100 dark:bg-red-900/30 rounded" title="Eliminar"><i class="fas fa-trash"></i></button></td>`;
                 tbody.appendChild(tr);
             });
         }
 
         function renderHistory() {
-            const list = document.getElementById('history-list');
-            list.innerHTML = '';
-            if(productionHistory.length === 0) {
-                list.innerHTML = '<li class="text-center opacity-50 italic py-2">No hay fabricaciones recientes.</li>';
-                return;
-            }
-            // Mostrar últimos 5
+            const list = document.getElementById('history-list'); list.innerHTML = '';
+            if(productionHistory.length === 0) { list.innerHTML = '<li class="text-center opacity-50 italic py-2">No hay fabricaciones recientes.</li>'; return; }
             productionHistory.slice(0, 5).forEach(hist => {
-                const li = document.createElement('li');
-                li.className = "bg-black/5 dark:bg-white/5 p-2 rounded flex justify-between items-center border border-black/10 dark:border-white/10";
-                li.innerHTML = `
-                    <div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> <span><strong>${hist.modelName}</strong> (${hist.length}cm)</span></div>
-                    <div class="text-right"><div class="font-bold text-emerald-600 dark:text-emerald-400">+${formatCOP.format(hist.profit)}</div><div class="opacity-50" style="font-size:10px">${hist.date}</div></div>
-                `;
+                const li = document.createElement('li'); li.className = "bg-black/5 dark:bg-white/5 p-2 rounded flex justify-between items-center border border-black/10 dark:border-white/10";
+                li.innerHTML = `<div class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-500"></i> <span><strong>${hist.modelName}</strong> (${hist.length}cm)</span></div><div class="text-right"><div class="font-bold text-emerald-600 dark:text-emerald-400">+${formatCOP.format(hist.profit)}</div><div class="opacity-50" style="font-size:10px">${hist.date}</div></div>`;
                 list.appendChild(li);
             });
         }
 
         document.getElementById('form-inventory').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('inv-name').value;
-            const type = document.getElementById('inv-type').value;
-            const unit = document.getElementById('inv-unit').value;
-            const qty = parseFloat(document.getElementById('inv-qty').value);
-            const totalCost = parseFloat(document.getElementById('inv-cost').value);
-            
-            inventory.push({ id: Date.now(), name: name, type: type, unit: unit, stock: qty, costPerUnit: (totalCost / qty) });
-            saveInventory(); this.reset(); showToast("Material agregado", "success");
+            e.preventDefault(); const name = document.getElementById('inv-name').value; const type = document.getElementById('inv-type').value; const unit = document.getElementById('inv-unit').value; const qty = parseFloat(document.getElementById('inv-qty').value); const totalCost = parseFloat(document.getElementById('inv-cost').value);
+            inventory.push({ id: Date.now(), name: name, type: type, unit: unit, stock: qty, costPerUnit: (totalCost / qty) }); saveInventory(); this.reset(); showToast("Material agregado", "success");
         });
 
-        function deleteItem(id) {
-            if(confirm("¿Estás seguro de eliminar este material de la bodega?")) {
-                inventory = inventory.filter(item => item.id !== id);
-                saveInventory(); showToast("Material eliminado", "success");
-            }
-        }
-
-        function clearInventory() {
-            if(confirm("⚠️ ¿Peligro! ¿Estás absolutamente seguro de querer VACIAR toda la bodega y el historial?")) {
-                inventory = []; productionHistory = [];
-                saveInventory(); showToast("Taller reiniciado a cero", "success");
-            }
-        }
-
+        function deleteItem(id) { if(confirm("¿Eliminar material?")) { inventory = inventory.filter(item => item.id !== id); saveInventory(); showToast("Material eliminado", "success"); } }
+        function clearInventory() { if(confirm("⚠️ ¿VACIAR bodega e historial?")) { inventory = []; productionHistory = []; saveInventory(); showToast("Taller reiniciado", "success"); } }
         function addStockPrompt(id) {
-            const item = inventory.find(i => i.id === id);
-            const qtyStr = prompt(`¿Cuántos ${item.unit} nuevos compraste de "${item.name}"?`);
-            if(!qtyStr) return;
-            const costStr = prompt(`¿Cuánto te costó en total esos ${qtyStr} ${item.unit} adicionales? (COP)`);
-            if(!costStr) return;
-
-            const addQty = parseFloat(qtyStr);
-            const addCost = parseFloat(costStr);
-            if(isNaN(addQty) || isNaN(addCost) || addQty <= 0) { showToast("Datos inválidos", "error"); return; }
-
-            // Promediar costo
-            const currentTotalValue = item.stock * item.costPerUnit;
-            const newTotalValue = currentTotalValue + addCost;
-            item.stock += addQty;
-            item.costPerUnit = newTotalValue / item.stock; // Nuevo precio promedio
-            
-            saveInventory();
-            showToast("Stock actualizado correctamente", "success");
+            const item = inventory.find(i => i.id === id); const qtyStr = prompt(`¿Cuántos ${item.unit} agregas a "${item.name}"?`); if(!qtyStr) return; const costStr = prompt(`¿Costo de esos ${qtyStr} ${item.unit}? (COP)`); if(!costStr) return;
+            const addQty = parseFloat(qtyStr); const addCost = parseFloat(costStr); if(isNaN(addQty) || isNaN(addCost) || addQty <= 0) return showToast("Inválido", "error");
+            item.stock += addQty; item.costPerUnit = ((item.stock - addQty)*item.costPerUnit + addCost) / item.stock; saveInventory(); showToast("Stock actualizado", "success");
         }
 
-        function exportInventory() {
-            const dataStr = JSON.stringify({inventory, productionHistory});
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            const exportFileDefaultName = 'Respaldo_Taller_Kumihimo.json';
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            showToast("Bodega exportada", "success");
-        }
-
+        function exportInventory() { const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(JSON.stringify({inventory, productionHistory})); const a = document.createElement('a'); a.setAttribute('href', dataUri); a.setAttribute('download', 'Respaldo_Taller_Kumihimo.json'); a.click(); showToast("Exportado", "success"); }
         function importInventory(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if(data.inventory) inventory = data.inventory;
-                    if(data.productionHistory) productionHistory = data.productionHistory;
-                    saveInventory();
-                    showToast("Bodega restaurada con éxito", "success");
-                } catch(error) {
-                    showToast("Archivo corrupto o inválido", "error");
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = ""; // Reset
+            const file = event.target.files[0]; if(!file) return; const reader = new FileReader();
+            reader.onload = function(e) { try { const data = JSON.parse(e.target.result); if(data.inventory) inventory = data.inventory; if(data.productionHistory) productionHistory = data.productionHistory; saveInventory(); showToast("Restaurado", "success"); } catch(e) { showToast("Archivo inválido", "error"); } };
+            reader.readAsText(file); event.target.value = ""; 
         }
 
         function populateDropdowns() {
-            const selThread = document.getElementById('prod-thread');
-            const selBeads = document.getElementById('prod-beads');
-            const selClasp = document.getElementById('prod-clasp');
-            const curT = selThread.value; const curB = selBeads.value; const curC = selClasp.value;
-
-            selThread.innerHTML = '<option value="">-- Seleccionar Hilo --</option>';
-            selBeads.innerHTML = '<option value="">-- Seleccionar Abalorio --</option>';
-            selClasp.innerHTML = '<option value="">-- Sin Broche --</option>';
-
-            inventory.forEach(item => {
-                const stockText = `${Number(item.stock).toFixed(2).replace(/\.00$/, '')} ${item.unit}`;
-                const opt = `<option value="${item.id}">${item.name} (${stockText})</option>`;
-                if(item.type === 'hilo') selThread.innerHTML += opt;
-                if(item.type === 'abalorio') selBeads.innerHTML += opt;
-                if(item.type === 'broche') selClasp.innerHTML += opt;
-            });
-
-            if(curT) selThread.value = curT; if(curB) selBeads.value = curB; if(curC) selClasp.value = curC;
+            const selT = document.getElementById('prod-thread'); const selB = document.getElementById('prod-beads'); const selC = document.getElementById('prod-clasp');
+            const cT = selT.value; const cB = selB.value; const cC = selC.value;
+            selT.innerHTML = '<option value="">-- Seleccionar Hilo --</option>'; selB.innerHTML = '<option value="">-- Seleccionar Abalorio --</option>'; selC.innerHTML = '<option value="">-- Sin Broche --</option>';
+            inventory.forEach(item => { const opt = `<option value="${item.id}">${item.name} (${Number(item.stock).toFixed(2).replace(/\.00$/, '')} ${item.unit})</option>`; if(item.type === 'hilo') selT.innerHTML += opt; if(item.type === 'abalorio') selB.innerHTML += opt; if(item.type === 'broche') selC.innerHTML += opt; });
+            if(cT) selT.value = cT; if(cB) selB.value = cB; if(cC) selC.value = cC;
         }
 
         let currentProductionReq = null;
-
         function calcularPrecios() {
-            const modelJson = document.getElementById('prod-model').value;
-            if(!modelJson) return;
-            const model = JSON.parse(modelJson);
-            const length = parseFloat(document.getElementById('prod-length').value) || 20;
-            const margin = parseFloat(document.getElementById('prod-margin').value) || 150;
-            
+            const modelJson = document.getElementById('prod-model').value; if(!modelJson) return; const model = JSON.parse(modelJson);
+            const length = parseFloat(document.getElementById('prod-length').value) || 20; const margin = parseFloat(document.getElementById('prod-margin').value) || 150;
             document.getElementById('beads-selector-container').style.display = model.beads ? 'block' : 'none';
+            const tId = document.getElementById('prod-thread').value; const bId = document.getElementById('prod-beads').value; const cId = document.getElementById('prod-clasp').value;
+            const mT = inventory.find(i => i.id == tId); const mB = inventory.find(i => i.id == bId); const mC = inventory.find(i => i.id == cId);
 
-            const tId = document.getElementById('prod-thread').value;
-            const bId = document.getElementById('prod-beads').value;
-            const cId = document.getElementById('prod-clasp').value;
+            const tlPerStrand = (length + 15) * model.multiplier; const tCm = tlPerStrand * model.threads; const bUnd = model.beads ? Math.ceil(length * 1.5 * (model.threads/2)) : 0; 
+            let tCost = 0; let dT = 0; let dB = 0; 
 
-            const matThread = inventory.find(i => i.id == tId);
-            const matBead = inventory.find(i => i.id == bId);
-            const matClasp = inventory.find(i => i.id == cId);
+            if(mT) { dT = mT.unit === 'metro' ? (tCm / 100) : tCm; tCost += dT * mT.costPerUnit; }
+            if(model.beads && mB) { dB = mB.unit === 'dedal' ? (bUnd / 100) : bUnd; tCost += dB * mB.costPerUnit; }
+            if(mC) tCost += 1 * mC.costPerUnit;
 
-            // Fórmula mejorada del Maestro: (L + 15cm) * multi * hilos
-            const threadLengthPerStrand = (length + 15) * model.multiplier; 
-            const totalThreadNeededCm = threadLengthPerStrand * model.threads; 
-            const totalBeadsNeededUnd = model.beads ? Math.ceil(length * 1.5 * (model.threads/2)) : 0; 
-            
-            let totalCost = 0; let deductionT = 0; let deductionB = 0; 
-
-            if(matThread) {
-                deductionT = matThread.unit === 'metro' ? (totalThreadNeededCm / 100) : totalThreadNeededCm;
-                totalCost += deductionT * matThread.costPerUnit;
-            }
-            if(model.beads && matBead) {
-                deductionB = matBead.unit === 'dedal' ? (totalBeadsNeededUnd / 100) : totalBeadsNeededUnd;
-                totalCost += deductionB * matBead.costPerUnit;
-            }
-            if(matClasp) totalCost += 1 * matClasp.costPerUnit;
-
-            const suggestedPriceCOP = totalCost * (1 + (margin / 100));
-            const netProfit = suggestedPriceCOP - totalCost;
-            
-            document.getElementById('price-cop').textContent = formatCOP.format(suggestedPriceCOP);
-            document.getElementById('price-usd').innerHTML = `<i class="fas fa-dollar-sign text-emerald-500"></i> ${(suggestedPriceCOP/USD_RATE).toFixed(2)}`;
-            document.getElementById('price-eur').innerHTML = `<i class="fas fa-euro-sign text-emerald-500"></i> ${(suggestedPriceCOP/EUR_RATE).toFixed(2)}`;
-            
-            document.getElementById('net-profit').textContent = `+${formatCOP.format(netProfit)} COP`;
-            document.getElementById('cost-details').textContent = `Costo Fab: ${formatCOP.format(totalCost)}`;
-            document.getElementById('material-usage').textContent = `Consumo: ${Math.ceil(totalThreadNeededCm)}cm hilo${model.beads ? ', ~'+totalBeadsNeededUnd+' cuentas' : ''}`;
-
-            currentProductionReq = {
-                modelName: model.name, length: length, profit: netProfit,
-                tId: tId, tQtyDeduct: deductionT,
-                bId: model.beads ? bId : null, bQtyDeduct: deductionB,
-                cId: cId, cQtyDeduct: cId ? 1 : 0
-            };
+            const priceCOP = tCost * (1 + (margin / 100)); const nProf = priceCOP - tCost;
+            document.getElementById('price-cop').textContent = formatCOP.format(priceCOP);
+            document.getElementById('price-usd').innerHTML = `<i class="fas fa-dollar-sign text-emerald-500"></i> ${(priceCOP/USD_RATE).toFixed(2)}`;
+            document.getElementById('price-eur').innerHTML = `<i class="fas fa-euro-sign text-emerald-500"></i> ${(priceCOP/EUR_RATE).toFixed(2)}`;
+            document.getElementById('net-profit').textContent = `+${formatCOP.format(nProf)} COP`;
+            document.getElementById('cost-details').textContent = `Costo Fab: ${formatCOP.format(tCost)}`;
+            document.getElementById('material-usage').textContent = `Consumo: ${Math.ceil(tCm)}cm hilo${model.beads ? ', ~'+bUnd+' cuentas' : ''}`;
+            currentProductionReq = { modelName: model.name, length: length, profit: nProf, tId: tId, tQtyDeduct: dT, bId: model.beads ? bId : null, bQtyDeduct: dB, cId: cId, cQtyDeduct: cId ? 1 : 0 };
         }
 
         function fabricarProducto() {
-            if(!currentProductionReq) return;
-            const req = currentProductionReq;
-            
-            if(!req.tId) { showToast("Selecciona hilo de bodega", "error"); return; }
-            if(req.bId === "" && document.getElementById('prod-model').value.includes('"beads":true')) { showToast("Selecciona abalorios", "error"); return; }
-
-            const tItem = inventory.find(i => i.id == req.tId);
-            if(!tItem || tItem.stock < req.tQtyDeduct) { showToast(`Stock insuficiente de hilo`, "error"); return; }
-
-            let bItem = null; let cItem = null;
-            if(req.bId) { bItem = inventory.find(i => i.id == req.bId); if(!bItem || bItem.stock < req.bQtyDeduct) { showToast(`Stock insuficiente de cuentas`, "error"); return; } }
-            if(req.cId) { cItem = inventory.find(i => i.id == req.cId); if(!cItem || cItem.stock < req.cQtyDeduct) { showToast(`Stock insuficiente de broches`, "error"); return; } }
-
-            // Deducciones
-            tItem.stock -= req.tQtyDeduct;
-            if(bItem) bItem.stock -= req.bQtyDeduct;
-            if(cItem) cItem.stock -= req.cQtyDeduct;
-
-            // Historial
-            const dateStr = new Date().toLocaleDateString('es-CO', {day: '2-digit', month: 'short', hour:'2-digit', minute:'2-digit'});
-            productionHistory.unshift({
-                modelName: req.modelName, length: req.length, profit: req.profit, date: dateStr
-            });
-
-            saveInventory();
-            showToast("¡Tejido fabricado y guardado en historial!", "success");
+            if(!currentProductionReq) return; const req = currentProductionReq;
+            if(!req.tId) return showToast("Selecciona hilo", "error"); if(req.bId === "" && document.getElementById('prod-model').value.includes('"beads":true')) return showToast("Selecciona abalorios", "error");
+            const tI = inventory.find(i => i.id == req.tId); if(!tI || tI.stock < req.tQtyDeduct) return showToast(`Stock insuficiente hilo`, "error");
+            let bI = null; let cI = null;
+            if(req.bId) { bI = inventory.find(i => i.id == req.bId); if(!bI || bI.stock < req.bQtyDeduct) return showToast(`Stock insuficiente cuentas`, "error"); }
+            if(req.cId) { cI = inventory.find(i => i.id == req.cId); if(!cI || cI.stock < req.cQtyDeduct) return showToast(`Stock insuficiente broches`, "error"); }
+            tI.stock -= req.tQtyDeduct; if(bI) bI.stock -= req.bQtyDeduct; if(cI) cI.stock -= req.cQtyDeduct;
+            productionHistory.unshift({ modelName: req.modelName, length: req.length, profit: req.profit, date: new Date().toLocaleDateString('es-CO', {day: '2-digit', month: 'short', hour:'2-digit', minute:'2-digit'}) });
+            saveInventory(); showToast("Tejido fabricado", "success");
         }
 
-        function calcularHilosBasico() {
-            const length = document.getElementById('calc-length').value;
-            const singleThread = Math.ceil((parseFloat(length)+15) * 3); // Usamos promedio de 3
-            document.getElementById('calc-result').textContent = singleThread + " cm";
-            document.getElementById('calc-result-double').textContent = singleThread * 2;
-        }
-
-        // INIT
-        renderInventory(); populateDropdowns(); renderHistory();
-
+        renderInventory(); populateDropdowns(); renderHistory(); drawDisk("kumihimo-disk"); drawSquarePlate("kumihimo-square");
+        calcularHilosAvanzado(); // Ejecutar calculador al inicio
     </script>
 </body>
-    </html>
+</html>
